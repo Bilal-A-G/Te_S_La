@@ -16,6 +16,8 @@ project "Project Scientia"
 
     targetdir ("bin/" .. outputdir)
     objdir ("int/" .. outputdir)
+    libdirs("%{prj.name}/lib")
+    includedirs("%{prj.name}/include")
 
     files
     {
