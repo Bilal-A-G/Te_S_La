@@ -19,10 +19,19 @@ project "Project Scientia"
     libdirs("%{prj.name}/lib")
     includedirs("%{prj.name}/include")
 
+
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/src/**.c"
+    }
+
+    links
+    {
+        "glfw3_mt",
+        "glfw3",
+        "OpenGL32"
     }
 
     filter "system:windows"
