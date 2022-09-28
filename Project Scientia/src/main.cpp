@@ -6,12 +6,13 @@
 constexpr int window_height = 800;
 constexpr int window_width = 1200;
 
-constexpr float mesh_size = 1.0f;
+constexpr float mesh_width = 1.0f;
+constexpr float mesh_height = 1.5f;
 
 void resize_window(GLFWwindow* window, int width, int height);
 void log_glfw_errors(int id, const char* error_message);
 void process_input(GLFWwindow* window);
-void draw_mesh();
+GLuint draw_mesh();
 GLuint compile_shaders();
 void render_mesh();
 
@@ -19,9 +20,9 @@ const char* vertex_shader_source = R"(
 #version 330 core
 #extension GL_ARB_separate_shader_objects : enable
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec4 read_colour;
+layout (location = 1) in vec3 read_colour;
 
-out vec4 colour;
+out vec3 colour;
 void main()
 {
     gl_Position = vec4(position.x, position.y, position.z, 1.0f);
@@ -31,11 +32,11 @@ void main()
 
 const char*  fragment_shader_source = R"(
 #version 330 core
-in vec4 colour;
+in vec3 colour;
 out vec4 frag_colour;
 void main()
 {
-    frag_colour = colour;
+    frag_colour = vec4(colour.x, colour.y, colour.z, 0.0f);
 }
 )";
 
@@ -71,7 +72,7 @@ int main(int argc, char* argv[])
     glViewport(0, 0, window_width, window_height);
     glfwSetFramebufferSizeCallback(window, resize_window);
     glUseProgram(compile_shaders());
-    draw_mesh();
+    glBindVertexArray(draw_mesh());
 
     while (!glfwWindowShouldClose(window))
     {
@@ -104,26 +105,46 @@ void process_input(GLFWwindow* window)
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 }
 
-void draw_mesh()
+GLuint draw_mesh()
 {
+    GLuint vao;
+    
     GLuint vbo;
+    GLuint ebo;
 
     constexpr float vertices[]
     {
-        0.0f, mesh_size/2, 1.0f, 0.0f, 0.0f, 0.0f,
-        -mesh_size/2, -mesh_size/2, 0.0f, 1.0f, 0.0f, 0.0f,
-        mesh_size/2, -mesh_size/2, 0.0f, 0.0f, 1.0f, 0.0f
+        0.0f, mesh_height/2, 0.0f, 0.0f, 0.0f,
+        -mesh_width/2, 0.0f, 0.0f, 1.0f, 0.0f,
+        mesh_width/2, 0.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, -mesh_height/2, 1.0f, 1.0f, 1.0f,
     };
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
+    constexpr unsigned short int vertex_indices[] =
+    {
+        0, 1, 2,
+        1, 2, 3
+    };
     
-    glEnableVertexAttribArray(0);
+    glGenVertexArrays(1, &vao);
+
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
+
+    glBindVertexArray(vao);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_indices), vertex_indices, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(sizeof(float) * 2));
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(0);
+    
+    return vao;
 }
 
 GLuint compile_shaders()
@@ -191,7 +212,7 @@ void render_mesh()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
 
