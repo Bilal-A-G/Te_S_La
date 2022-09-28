@@ -17,19 +17,25 @@ void render_mesh();
 
 const char* vertex_shader_source = R"(
 #version 330 core
+#extension GL_ARB_separate_shader_objects : enable
 layout (location = 0) in vec3 position;
+layout (location = 1) in vec4 read_colour;
+
+out vec4 colour;
 void main()
 {
     gl_Position = vec4(position.x, position.y, position.z, 1.0f);
+    colour = read_colour;
 }
 )";
 
 const char*  fragment_shader_source = R"(
 #version 330 core
+in vec4 colour;
 out vec4 frag_colour;
 void main()
 {
-    frag_colour = vec4(0.5f, 0.0f, 0.6f, 1.0f);
+    frag_colour = colour;
 }
 )";
 
@@ -104,17 +110,20 @@ void draw_mesh()
 
     constexpr float vertices[]
     {
-        0.0f, mesh_size/2,
-        -mesh_size/2, -mesh_size/2,
-        mesh_size/2, -mesh_size/2
+        0.0f, mesh_size/2, 1.0f, 0.0f, 0.0f, 0.0f,
+        -mesh_size/2, -mesh_size/2, 0.0f, 1.0f, 0.0f, 0.0f,
+        mesh_size/2, -mesh_size/2, 0.0f, 0.0f, 1.0f, 0.0f
     };
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(2 * sizeof(float)));
+    
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 }
 
 GLuint compile_shaders()
