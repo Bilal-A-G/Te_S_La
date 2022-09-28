@@ -6,7 +6,7 @@
 constexpr int window_height = 800;
 constexpr int window_width = 1200;
 
-constexpr float mesh_size = 0.5f;
+constexpr float mesh_size = 1.0f;
 
 void resize_window(GLFWwindow* window, int width, int height);
 void log_glfw_errors(int id, const char* error_message);
@@ -17,10 +17,10 @@ void render_mesh();
 
 const char* vertex_shader_source = R"(
 #version 330 core
-layout {location = 0} in vec3 position;
+layout (location = 0) in vec3 position;
 void main()
 {
-    gl_position = vec4(position.x, position.y, position.z, 0.0f);
+    gl_Position = vec4(position.x, position.y, position.z, 1.0f);
 }
 )";
 
@@ -29,7 +29,7 @@ const char*  fragment_shader_source = R"(
 out vec4 frag_colour;
 void main()
 {
-    frag_colour = vec4(0.6f, 0.0f, 0.5f, 1.0f);
+    frag_colour = vec4(0.5f, 0.0f, 0.6f, 1.0f);
 }
 )";
 
@@ -143,6 +143,10 @@ GLuint compile_shaders()
         glGetShaderInfoLog(vertex_shader, 512, nullptr, infolog);
         std::cout << "Vertex shader failed to compile " << infolog << "\n";
     }
+    else
+    {
+        std::cout << "Vertex shader successfully compiled " << "\n";
+    }
 
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
     if(!success)
@@ -150,6 +154,22 @@ GLuint compile_shaders()
         glGetShaderInfoLog(fragment_shader, 512, nullptr, infolog);
         std::cout << "Fragment shader failed to compile " << infolog << "\n";
     }
+    else
+    {
+        std::cout << "Fragment shader successfully compiled " << "\n";
+    }
+
+    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+    if(!success)
+    {
+        glGetProgramInfoLog(shader_program, 512, nullptr, infolog);
+        std::cout << "Shader program failed to link " << infolog << "\n";
+    }
+    else
+    {
+        std::cout << "Shader program successfully linked " << "\n";
+    }
+
 #endif
     
     glDeleteShader(fragment_shader);
@@ -160,6 +180,7 @@ GLuint compile_shaders()
 
 void render_mesh()
 {
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
