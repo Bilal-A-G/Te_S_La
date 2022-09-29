@@ -1,4 +1,4 @@
-#include"glad/glad.h"
+#include "shader.h"
 #include"GLFW/glfw3.h"
 
 #include<iostream>
@@ -15,30 +15,6 @@ void process_input(GLFWwindow* window);
 GLuint draw_mesh();
 GLuint compile_shaders();
 void render_mesh();
-
-const char* vertex_shader_source = R"(
-#version 330 core
-#extension GL_ARB_separate_shader_objects : enable
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 read_colour;
-
-out vec3 colour;
-void main()
-{
-    gl_Position = vec4(position.x, position.y, position.z, 1.0f);
-    colour = read_colour;
-}
-)";
-
-const char*  fragment_shader_source = R"(
-#version 330 core
-in vec3 colour;
-out vec4 frag_colour;
-void main()
-{
-    frag_colour = vec4(colour.x, colour.y, colour.z, 0.0f);
-}
-)";
 
 //TODO: refactor out all the preprocessor conditionals and logging
 int main(int argc, char* argv[])
@@ -71,7 +47,9 @@ int main(int argc, char* argv[])
 
     glViewport(0, 0, window_width, window_height);
     glfwSetFramebufferSizeCallback(window, resize_window);
-    glUseProgram(compile_shaders());
+    shader shader_manager;
+    
+    glUseProgram(shader_manager.get_program());
     glBindVertexArray(draw_mesh());
 
     while (!glfwWindowShouldClose(window))
@@ -145,67 +123,6 @@ GLuint draw_mesh()
     glEnableVertexAttribArray(0);
     
     return vao;
-}
-
-GLuint compile_shaders()
-{
-    const GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_source, nullptr);
-    glCompileShader(vertex_shader);
-
-    const GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_source, nullptr);
-    glCompileShader(fragment_shader);
-
-    const GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
-
-    glLinkProgram(shader_program);
-
-#ifdef PS_DEBUG
-    char infolog[512];
-    int success;
-    
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(vertex_shader, 512, nullptr, infolog);
-        std::cout << "Vertex shader failed to compile " << infolog << "\n";
-    }
-    else
-    {
-        std::cout << "Vertex shader successfully compiled " << "\n";
-    }
-
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(fragment_shader, 512, nullptr, infolog);
-        std::cout << "Fragment shader failed to compile " << infolog << "\n";
-    }
-    else
-    {
-        std::cout << "Fragment shader successfully compiled " << "\n";
-    }
-
-    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-    if(!success)
-    {
-        glGetProgramInfoLog(shader_program, 512, nullptr, infolog);
-        std::cout << "Shader program failed to link " << infolog << "\n";
-    }
-    else
-    {
-        std::cout << "Shader program successfully linked " << "\n";
-    }
-
-#endif
-    
-    glDeleteShader(fragment_shader);
-    glDeleteShader(vertex_shader);
-    
-    return shader_program;
 }
 
 void render_mesh()

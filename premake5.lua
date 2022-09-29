@@ -22,9 +22,10 @@ project "Project Scientia"
 
     files
     {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp",
-        "%{prj.name}/src/**.c"
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
+        "%{prj.name}/**.c",
+        "%{prj.name}/**.glsl"
     }
 
     links
