@@ -2,12 +2,15 @@
 #include"GLFW/glfw3.h"
 
 #include<iostream>
+#include <glm/gtc/matrix_transform.hpp>
 
-constexpr int window_height = 800;
-constexpr int window_width = 1200;
+int window_height = 800;
+int window_width = 1200;
 
 constexpr float mesh_width = 1.0f;
-constexpr float mesh_height = 1.5f;
+constexpr float mesh_height = 1.0f;
+
+constexpr bool resize_buffer = true;
 
 void resize_window(GLFWwindow* window, int width, int height);
 void log_glfw_errors(int id, const char* error_message);
@@ -17,58 +20,14 @@ GLuint compile_shaders();
 void render_mesh();
 
 //TODO: refactor out all the preprocessor conditionals and logging
-int main(int argc, char* argv[])
-{
-    glfwSetErrorCallback(log_glfw_errors);
-    glfwInit()
-
-#ifdef PS_DEBUG
-    == GLFW_TRUE ?
-        std::cout << "GLFW initialized \n" : std::cout <<"GLFW failed to initialize \n";
-#elif PS_RELEASE
-    ;
-#endif
-    
-    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "My Super Cool Window", nullptr, nullptr);
-    glfwMakeContextCurrent(window);
-
-#ifdef PS_DEBUG
-    window == nullptr ? std::cout << "Failed to create window \n" : std::cout <<"Window successfully created \n";
-#endif
-    
-    gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))
-
-#ifdef PS_DEBUG
-    == false ?
-        std::cout << "Failed to load GLAD \n" : std::cout <<"GLAD loaded successfully \n";
-#elif PS_RELEASE
-    ;
-#endif
-
-    glViewport(0, 0, window_width, window_height);
-    glfwSetFramebufferSizeCallback(window, resize_window);
-    shader shader_manager;
-    
-    glUseProgram(shader_manager.get_program());
-    glBindVertexArray(draw_mesh());
-
-    while (!glfwWindowShouldClose(window))
-    {
-        glfwSwapBuffers(window);
-
-        process_input(window);
-        render_mesh();
-        
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
-}
+int main(int argc, char* argv[]);
 
 
 void resize_window(GLFWwindow* window, int width, int height)
 {
     glViewport(0,0, width, height);
+    window_height = height;
+    window_width = width;
 }
 
 void log_glfw_errors(int id, const char* error_message)
@@ -92,16 +51,14 @@ GLuint draw_mesh()
 
     constexpr float vertices[]
     {
-        0.0f, mesh_height/2, 0.0f, 0.0f, 0.0f,
-        -mesh_width/2, 0.0f, 0.0f, 1.0f, 0.0f,
-        mesh_width/2, 0.0f, 0.0f, 0.0f, 1.0f,
-        0.0f, -mesh_height/2, 1.0f, 1.0f, 1.0f,
+        0.0f, mesh_height/2, 1.0f, 0.0f, 0.0f,
+        -mesh_width/2, -mesh_height/2, 0.0f, 1.0f, 0.0f,
+        mesh_width/2, -mesh_height/2, 0.0f, 0.0f, 1.0f,
     };
 
     constexpr unsigned short int vertex_indices[] =
     {
         0, 1, 2,
-        1, 2, 3
     };
     
     glGenVertexArrays(1, &vao);
@@ -130,6 +87,84 @@ void render_mesh()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+}
+
+int main(int argc, char* argv[])
+{
+    glfwSetErrorCallback(log_glfw_errors);
+    glfwInit()
+
+#ifdef PS_DEBUG
+        == GLFW_TRUE ?
+            std::cout << "GLFW initialized \n" : std::cout <<"GLFW failed to initialize \n";
+#elif PS_RELEASE
+    ;
+#endif
+    
+    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "My Super Cool Window", nullptr, nullptr);
+    glfwMakeContextCurrent(window);
+
+#ifdef PS_DEBUG
+    window == nullptr ? std::cout << "Failed to create window \n" : std::cout <<"Window successfully created \n";
+#endif
+    
+    gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))
+
+#ifdef PS_DEBUG
+        == false ?
+            std::cout << "Failed to load GLAD \n" : std::cout <<"GLAD loaded successfully \n";
+#elif PS_RELEASE
+    ;
+#endif
+
+    glViewport(0, 0, window_width, window_height);
+    if(resize_buffer)
+        glfwSetFramebufferSizeCallback(window, resize_window);
+
+    const glm::mat4 projection = glm::perspective(glm::radians(50.0f), static_cast<float>(window_width)/static_cast<float>(window_height), 0.1f, 100.0f);
+    const glm::mat4 view = glm::lookAt(
+        glm::vec3(1, 1, 1),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+    
+    glm::mat4 model = glm::mat4(1.0f);
+
+    const glm::mat4 scale = glm::mat4(
+        0.8, 0, 0, 0,
+        0, 0.8, 0, 0,
+        0, 0, 0.8, 0,
+        0, 0, 0, 1
+    );
+    const glm::mat4 translation = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+    const glm::mat4 rotation = glm::rotate(model, glm::radians(100.0f), glm::vec3(0, 0, -1));
+
+    model = translation * rotation * scale * model;
+    
+    glm::mat4 mvp = projection * view * model;
+    
+    shader shader_manager;
+    const GLuint shader_program = shader_manager.get_program();
+    
+    glUseProgram(shader_program);
+    
+    glBindVertexArray(draw_mesh());
+
+    while (!glfwWindowShouldClose(window))
+    {
+        glfwSwapBuffers(window);
+
+        process_input(window);
+        
+        const GLint mvp_location = glGetUniformLocation(shader_program, "MVP");
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+        
+        render_mesh();
+        
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
 }
 
 
