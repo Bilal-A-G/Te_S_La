@@ -9,6 +9,7 @@ int window_width = 1200;
 
 constexpr float mesh_width = 1.0f;
 constexpr float mesh_height = 1.0f;
+constexpr float mesh_length = 1.0f;
 
 constexpr bool resize_buffer = true;
 
@@ -51,14 +52,42 @@ GLuint draw_mesh()
 
     constexpr float vertices[]
     {
-        0.0f, mesh_height/2, 1.0f, 0.0f, 0.0f,
-        -mesh_width/2, -mesh_height/2, 0.0f, 1.0f, 0.0f,
-        mesh_width/2, -mesh_height/2, 0.0f, 0.0f, 1.0f,
+        -mesh_width/2, mesh_height/2, mesh_length/2, 1.0f, 0.0f, 0.0f,
+        mesh_width/2, mesh_height/2, mesh_length/2, 0.0f, 1.0f, 0.0f,
+        -mesh_width/2, -mesh_height/2, mesh_length/2, 0.0f, 1.0f, 0.0f,
+        mesh_width/2, -mesh_height/2, mesh_length/2, 0.0f, 0.0f, 1.0f,
+
+        -mesh_width/2, mesh_height/2, -mesh_length/2, 1.0f, 0.0f, 0.0f,
+        mesh_width/2, mesh_height/2, -mesh_length/2, 0.0f, 1.0f, 0.0f,
+        -mesh_width/2, -mesh_height/2, -mesh_length/2, 0.0f, 1.0f, 0.0f,
+        mesh_width/2, -mesh_height/2, -mesh_length/2, 0.0f, 0.0f, 1.0f
     };
 
     constexpr unsigned short int vertex_indices[] =
     {
+        //Front face
         0, 1, 2,
+        1, 3, 2,
+
+        //Back face
+        4, 5, 6,
+        5, 7, 6,
+
+        //Right face
+        1, 5, 3,
+        5, 7, 3,
+
+        //Left face
+        0, 4, 6,
+        6, 2, 0,
+
+        //Top face
+        4, 5, 1,
+        1, 0, 4,
+
+        //Bottom face
+        3, 7, 6,
+        6, 2, 3,
     };
     
     glGenVertexArrays(1, &vao);
@@ -74,8 +103,8 @@ GLuint draw_mesh()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_indices), vertex_indices, GL_STATIC_DRAW);
     
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(sizeof(float) * 2));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(sizeof(float) * 3));
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(0);
     
@@ -84,9 +113,11 @@ GLuint draw_mesh()
 
 void render_mesh()
 {
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_SHORT, nullptr);
 }
 
 int main(int argc, char* argv[])
@@ -136,8 +167,8 @@ int main(int argc, char* argv[])
         0, 0, 0.8, 0,
         0, 0, 0, 1
     );
-    const glm::mat4 translation = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
-    const glm::mat4 rotation = glm::rotate(model, glm::radians(100.0f), glm::vec3(0, 0, -1));
+    const glm::mat4 translation = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    const glm::mat4 rotation = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
 
     model = translation * rotation * scale * model;
     
