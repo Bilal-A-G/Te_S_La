@@ -9,8 +9,8 @@ workspace "Project-Scientia"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-project "Project Scientia"
-    location "Project Scientia"
+project "Engine"
+    location "Engine"
     kind "ConsoleApp"
     language "C++"
 
