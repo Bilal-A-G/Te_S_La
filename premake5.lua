@@ -32,7 +32,8 @@ project "Engine"
     {
         "glfw3_mt",
         "glfw3",
-        "OpenGL32"
+        "OpenGL32",
+        "assimp-vc142-mt"
     }
 
     filter "system:windows"

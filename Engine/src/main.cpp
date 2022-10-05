@@ -1,4 +1,5 @@
 #include "shader.h"
+#include "mesh_loader.h"
 #include"GLFW/glfw3.h"
 
 #include<iostream>
@@ -89,6 +90,18 @@ GLuint draw_mesh()
         3, 7, 6,
         6, 2, 3,
     };
+
+    mesh_loader loader;
+    std::vector<vertex> verts;
+    std::vector<uint16_t> inds;
+    
+    loader.get_mesh_vertices("cube.vbo", verts);
+    loader.get_mesh_indices("cube.vbo", inds);
+
+    for(vertex vert : verts)
+    {
+        std::cout << "Vert Pos: " << vert.position.x << ", " << vert.position.y << ", " << vert.position.z << "\n";
+    }
     
     glGenVertexArrays(1, &vao);
 
