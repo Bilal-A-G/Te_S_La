@@ -3,6 +3,9 @@
 #include <iostream>
 #endif
 
+
+//Handles the creation of a vao, vbo, and ebo as well as loading the appropriate data to each
+//Once done, assigns the mesh's vao
 void Mesh::SetupGLObjects()
 {
     GLuint vao;
@@ -44,6 +47,8 @@ void Mesh::Draw()
     glBindVertexArray(0);
 }
 
+//Wrapper functions around various glm transform functions. Just provides better syntax for now, but in the future will contain more functionality 
+
 void Mesh::Rotate(float angle, glm::vec3 upVector)
 {
     m_rotationMatrix = glm::rotate(IDENTITY_MAT, glm::radians(angle), upVector);
@@ -59,6 +64,7 @@ void Mesh::Translate(glm::vec3 translation)
     m_positionMatrix = glm::translate(IDENTITY_MAT, translation);
 }
 
+//Updates the model view projection matrix uniform in the vertex shader TODO: move matrix multiplications into the vertex shader file, so it's done on the GPU instead of the CPU
 void Mesh::UpdateMVPMatrix()
 {
     const GLint mvp_location = glGetUniformLocation(m_shaderProgram, "MVP");

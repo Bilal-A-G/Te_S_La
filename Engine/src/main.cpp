@@ -1,11 +1,15 @@
-#include "shader.h"
+#include "Shader.h"
 #include "Mesh.h"
 #include"GLFW/glfw3.h"
 
 #include<iostream>
-#include <glm/gtc/matrix_transform.hpp>
+
+//This file is the entry point of the entire application, TODO: move entry point somewhere else
 
 #define GLOBAL_UP_VECTOR glm::vec3(0, 1, 0)
+
+float nearPlane = 0.1f;
+float farPlane = 200.0f;
 
 int window_height = 800;
 int window_width = 1200;
@@ -16,7 +20,9 @@ constexpr float mesh_length = 1.0f;
 
 constexpr bool resize_buffer = true;
 
-//TODO: refactor out all the preprocessor conditionals and logging, maybe get spdlog
+//TODO: use precompiled headers so you aren't compiling the same headers over and over again
+//Various callbacks for glfw
+
 void ResizeWindow(GLFWwindow* window, int width, int height)
 {
     glViewport(0,0, width, height);
@@ -31,6 +37,7 @@ void LogGLFWErrors(int id, const char* error_message)
 #endif
 }
 
+//Checks for key presses and does stuff with them
 void ProcessInput(GLFWwindow* window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
@@ -38,13 +45,8 @@ void ProcessInput(GLFWwindow* window)
 
 Mesh CreateMesh()
 {
-
-    const glm::mat4 projection = glm::perspective(glm::radians(50.0f), static_cast<float>(window_width)/static_cast<float>(window_height), 0.1f, 100.0f);
-    const glm::mat4 view = glm::lookAt(
-        glm::vec3(1, 1, 1),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f)
-    );
+    const glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(window_width)/static_cast<float>(window_height), nearPlane, farPlane);
+    const glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBAL_UP_VECTOR);
     
     const std::vector<float> vertices
     {
@@ -86,12 +88,13 @@ Mesh CreateMesh()
         6, 2, 3,
     };
 
-    shader shader_manager;
-    const GLuint shader_program = shader_manager.get_program();
+    Shader basicShader;
+    const GLuint shaderProgram = basicShader.GetProgram();
     
-    return Mesh(vertices, indices, shader_program, view, projection);
+    return Mesh(vertices, indices, shaderProgram, view, projection);
 }
 
+//Handles all common rendering operations, things that need to be done before drawing a mesh
 void RenderLoop()
 {
     glEnable(GL_DEPTH_TEST);
@@ -100,6 +103,7 @@ void RenderLoop()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+//TODO: refactor out all the preprocessor conditionals and logging to a separate class, maybe get spdlog
 int main(int argc, char* argv[])
 {
     glfwSetErrorCallback(LogGLFWErrors);
@@ -118,7 +122,8 @@ int main(int argc, char* argv[])
 #ifdef PS_DEBUG
     window == nullptr ? std::cout << "Failed to create window \n" : std::cout <<"Window successfully created \n";
 #endif
-    
+
+    //Checking if glad is working or not
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))
 
 #ifdef PS_DEBUG
@@ -159,9 +164,3 @@ int main(int argc, char* argv[])
     
     glfwTerminate();
 }
-
-
-
-
-
-

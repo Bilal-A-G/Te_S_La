@@ -1,6 +1,6 @@
 ﻿// ReSharper disable CppMemberFunctionMayBeStatic
 // ReSharper disable CppMemberFunctionMayBeConst
-#include "shader.h"
+#include "Shader.h"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -12,19 +12,20 @@ constexpr short num_shaders = 2;
 const char* vertex_shader_source_path = "./src/shader_src/vertex.glsl";
 const char* fragment_shader_source_path = "./src/shader_src/fragment.glsl";
 
-GLuint shader::get_program()
+//Returns a shader program
+GLuint Shader::GetProgram()
 {
     GLuint compiled_shaders[num_shaders];
-    compiled_shaders[0] = compile_shader(vertex_shader_source_path, GL_VERTEX_SHADER);
-    compiled_shaders[1] = compile_shader(fragment_shader_source_path, GL_FRAGMENT_SHADER);
+    compiled_shaders[0] = CompileShader(vertex_shader_source_path, GL_VERTEX_SHADER);
+    compiled_shaders[1] = CompileShader(fragment_shader_source_path, GL_FRAGMENT_SHADER);
 
     const GLuint* array_ptr = compiled_shaders;
 
-    return create_shader_program(array_ptr);
+    return CreateShaderProgram(array_ptr);
 }
 
-
-GLuint shader::compile_shader(const char* file_path, const GLenum type)
+//Reads a shader file and compiles it
+GLuint Shader::CompileShader(const char* file_path, const GLenum type)
 {
     std::ifstream shader_file;
     std::string shader_code;
@@ -87,8 +88,8 @@ GLuint shader::compile_shader(const char* file_path, const GLenum type)
     return shader;
 }
 
-
-GLuint shader::create_shader_program(const GLuint* compiled_shaders)
+//Creates a shader program from compiled shaders
+GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
 {
     const GLuint shader_program = glCreateProgram();
     

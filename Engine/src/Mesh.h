@@ -2,8 +2,9 @@
 #include <array>
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
-
 #include "glad/glad.h"
+
+//This class handles per mesh data/operations
 
 #define IDENTITY_MAT glm::mat4(1.0f)
 
