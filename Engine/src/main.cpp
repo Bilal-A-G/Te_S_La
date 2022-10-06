@@ -1,9 +1,11 @@
 #include "shader.h"
-#include "mesh_loader.h"
+#include "Mesh.h"
 #include"GLFW/glfw3.h"
 
 #include<iostream>
 #include <glm/gtc/matrix_transform.hpp>
+
+#define GLOBAL_UP_VECTOR glm::vec3(0, 1, 0)
 
 int window_height = 800;
 int window_width = 1200;
@@ -14,44 +16,37 @@ constexpr float mesh_length = 1.0f;
 
 constexpr bool resize_buffer = true;
 
-void resize_window(GLFWwindow* window, int width, int height);
-void log_glfw_errors(int id, const char* error_message);
-void process_input(GLFWwindow* window);
-GLuint draw_mesh();
-GLuint compile_shaders();
-void render_mesh();
-
-//TODO: refactor out all the preprocessor conditionals and logging
-int main(int argc, char* argv[]);
-
-
-void resize_window(GLFWwindow* window, int width, int height)
+//TODO: refactor out all the preprocessor conditionals and logging, maybe get spdlog
+void ResizeWindow(GLFWwindow* window, int width, int height)
 {
     glViewport(0,0, width, height);
     window_height = height;
     window_width = width;
 }
 
-void log_glfw_errors(int id, const char* error_message)
+void LogGLFWErrors(int id, const char* error_message)
 {
 #ifdef PS_DEBUG
     std::cout << error_message << " ID = " << id << "\n";
 #endif
 }
 
-void process_input(GLFWwindow* window)
+void ProcessInput(GLFWwindow* window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 }
 
-GLuint draw_mesh()
+Mesh CreateMesh()
 {
-    GLuint vao;
-    
-    GLuint vbo;
-    GLuint ebo;
 
-    constexpr float vertices[]
+    const glm::mat4 projection = glm::perspective(glm::radians(50.0f), static_cast<float>(window_width)/static_cast<float>(window_height), 0.1f, 100.0f);
+    const glm::mat4 view = glm::lookAt(
+        glm::vec3(1, 1, 1),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+    
+    const std::vector<float> vertices
     {
         -mesh_width/2, mesh_height/2, mesh_length/2, 1.0f, 0.0f, 0.0f,
         mesh_width/2, mesh_height/2, mesh_length/2, 0.0f, 1.0f, 0.0f,
@@ -64,7 +59,7 @@ GLuint draw_mesh()
         mesh_width/2, -mesh_height/2, -mesh_length/2, 0.0f, 0.0f, 1.0f
     };
 
-    constexpr unsigned short int vertex_indices[] =
+    const std::vector<short> indices
     {
         //Front face
         0, 1, 2,
@@ -91,51 +86,23 @@ GLuint draw_mesh()
         6, 2, 3,
     };
 
-    mesh_loader loader;
-    std::vector<vertex> verts;
-    std::vector<uint16_t> inds;
+    shader shader_manager;
+    const GLuint shader_program = shader_manager.get_program();
     
-    loader.get_mesh_vertices("cube.vbo", verts);
-    loader.get_mesh_indices("cube.vbo", inds);
-
-    for(vertex vert : verts)
-    {
-        std::cout << "Vert Pos: " << vert.position.x << ", " << vert.position.y << ", " << vert.position.z << "\n";
-    }
-    
-    glGenVertexArrays(1, &vao);
-
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
-
-    glBindVertexArray(vao);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_indices), vertex_indices, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(sizeof(float) * 3));
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(0);
-    
-    return vao;
+    return Mesh(vertices, indices, shader_program, view, projection);
 }
 
-void render_mesh()
+void RenderLoop()
 {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_SHORT, nullptr);
 }
 
 int main(int argc, char* argv[])
 {
-    glfwSetErrorCallback(log_glfw_errors);
+    glfwSetErrorCallback(LogGLFWErrors);
     glfwInit()
 
 #ifdef PS_DEBUG
@@ -163,51 +130,33 @@ int main(int argc, char* argv[])
 
     glViewport(0, 0, window_width, window_height);
     if(resize_buffer)
-        glfwSetFramebufferSizeCallback(window, resize_window);
+        glfwSetFramebufferSizeCallback(window, ResizeWindow);
 
-    const glm::mat4 projection = glm::perspective(glm::radians(50.0f), static_cast<float>(window_width)/static_cast<float>(window_height), 0.1f, 100.0f);
-    const glm::mat4 view = glm::lookAt(
-        glm::vec3(1, 1, 1),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f)
-    );
-    
-    glm::mat4 model = glm::mat4(1.0f);
+    Mesh mesh = CreateMesh();
+    mesh.Translate(glm::vec3(-0.5, -0.5, -2));
 
-    const glm::mat4 scale = glm::mat4(
-        0.8, 0, 0, 0,
-        0, 0.8, 0, 0,
-        0, 0, 0.8, 0,
-        0, 0, 0, 1
-    );
-    const glm::mat4 translation = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-    const glm::mat4 rotation = glm::rotate(model, glm::radians(0.0f), glm::vec3(0, 1, 0));
+    Mesh mesh2 = CreateMesh();
+    mesh2.Translate(glm::vec3(-0.6, 0, 1));
 
-    model = translation * rotation * scale * model;
+    float angle = 0.0f;
     
-    glm::mat4 mvp = projection * view * model;
-    
-    shader shader_manager;
-    const GLuint shader_program = shader_manager.get_program();
-    
-    glUseProgram(shader_program);
-    
-    glBindVertexArray(draw_mesh());
-
     while (!glfwWindowShouldClose(window))
     {
+        angle += 1;
+        if(angle > 360) angle = 0.0f;
+        
         glfwSwapBuffers(window);
 
-        process_input(window);
-        
-        const GLint mvp_location = glGetUniformLocation(shader_program, "MVP");
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
-        
-        render_mesh();
+        ProcessInput(window);
+
+        RenderLoop();
+        mesh.Rotate(angle, GLOBAL_UP_VECTOR);
+        mesh.Draw();
+        mesh2.Draw();
         
         glfwPollEvents();
     }
-
+    
     glfwTerminate();
 }
 
