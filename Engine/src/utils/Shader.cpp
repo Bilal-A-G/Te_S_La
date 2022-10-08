@@ -8,7 +8,9 @@
 #include <iostream>
 #endif
 
-constexpr short num_shaders = 2;
+namespace TESLA
+{
+    constexpr short num_shaders = 2;
 const char* vertex_shader_source_path = "./src/shader_src/vertex.glsl";
 const char* fragment_shader_source_path = "./src/shader_src/fragment.glsl";
 
@@ -117,6 +119,7 @@ GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
     }
 #endif
     return shader_program;
+}
 }
 
 

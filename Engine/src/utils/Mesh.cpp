@@ -3,8 +3,9 @@
 #include <iostream>
 #endif
 
-
-//Handles the creation of a vao, vbo, and ebo as well as loading the appropriate data to each
+namespace TESLA
+{
+    //Handles the creation of a vao, vbo, and ebo as well as loading the appropriate data to each
 //Once done, assigns the mesh's vao
 void Mesh::SetupGLObjects()
 {
@@ -35,7 +36,6 @@ std::cout << "Sent to buffer: " << m_vertices.size() << " vertices, " << m_indic
 #endif
 
     m_vao = vao;
-    glBindVertexArray(0);
 }
 
 void Mesh::Draw()
@@ -73,6 +73,7 @@ void Mesh::UpdateMVPMatrix()
     glm::mat4 mvpMatrix = m_projectionMatrix * m_viewMatrix * (m_positionMatrix * m_rotationMatrix * m_scaleMatrix);
     
     glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvpMatrix[0][0]);
+}
 }
 
 

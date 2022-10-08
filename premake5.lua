@@ -72,9 +72,11 @@ project "Game"
 
     includedirs
     {
-        "Engine/src"
+        "Engine/src",
+        "Engine/include"
     }
 
+    libdirs("Engine/lib")
 
     files
     {
@@ -86,7 +88,11 @@ project "Game"
 
     links
     {
-        "Engine"
+        "glfw3_mt",
+        "glfw3",
+        "OpenGL32",
+        "assimp-vc142-mt",
+        "Engine",
     }
 
     filter "system:windows"

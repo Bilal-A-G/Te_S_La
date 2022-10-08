@@ -9,7 +9,9 @@
 
 //This class is basically a group of meshes that exists to more easily interact with assimp
 
-const std::string resourcesPath = "./res/";
+namespace TESLA
+{
+    const std::string resourcesPath = "./res/";
 
 void Model::LoadModel(const char* fileName)
 {
@@ -115,6 +117,7 @@ void Model::Rotate(float angle, glm::vec3 upVector)
     {
         m_meshes[i].Rotate(angle, upVector);
     }
+}
 }
 
 
