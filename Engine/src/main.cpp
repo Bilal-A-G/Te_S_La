@@ -60,6 +60,7 @@ void RenderLoop()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+/*
 //TODO: refactor out all the preprocessor conditionals and logging to a separate class, maybe get spdlog
 int main(int argc, char* argv[])
 {
@@ -124,3 +125,4 @@ int main(int argc, char* argv[])
     
     glfwTerminate();
 }
+*/

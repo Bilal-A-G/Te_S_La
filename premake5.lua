@@ -8,6 +8,7 @@ workspace "Te_S_La"
     }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+gameName = "Game"
 
 project "Engine"
     location "Engine"
@@ -49,7 +50,9 @@ project "Engine"
 
         postbuildcommands
         {
-            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/%{prj.name}")
+            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/%{prj.name}"),
+            ("{Copy} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/" .. gameName),
+            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/" .. gameName)
         }
 
     filter "configurations:Debug"
@@ -64,12 +67,12 @@ project "Game"
     location "Game"
     kind "ConsoleApp"
     language "C++"
-
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("int/" .. outputdir .. "/%{prj.name}")
+
     includedirs
     {
-        "Engine/src",
+        "Engine/src"
     }
 
 
@@ -94,11 +97,6 @@ project "Game"
         defines
         {
             "TS_WIN"
-        }
-
-        postbuildcommands
-        {
-            ("{Copy} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/%{prj.name}")
         }
 
     filter "configurations:Debug"
