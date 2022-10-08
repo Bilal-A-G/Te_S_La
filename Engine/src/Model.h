@@ -10,8 +10,8 @@ public:
     Model(const char* fileName, const GLuint& shaderProgram, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
     {
         m_shaderProgram = shaderProgram;
-        m_viewMatrix = viewMatrix;
         m_projectionMatrix = projectionMatrix;
+        m_viewMatrix = viewMatrix;
 
         LoadModel(fileName);
     }
@@ -22,7 +22,6 @@ public:
     void Rotate(float angle, glm::vec3 upVector);
     void Scale(glm::vec3 scale);
     
-    const std::vector<Mesh>& GetMeshes(){ return m_meshes;}
 private:
     void LoadModel(const char* fileName);
     void ProcessNode(aiNode* node, const aiScene* scene);

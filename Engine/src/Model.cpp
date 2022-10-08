@@ -21,6 +21,7 @@ void Model::LoadModel(const char* fileName)
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         std::cout << "Assimp failed to load mesh: " << importer.GetErrorString() << "\n";
+        return;
     }
     else
     {

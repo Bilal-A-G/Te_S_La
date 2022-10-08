@@ -92,10 +92,16 @@ int main(int argc, char* argv[])
     glViewport(0, 0, window_width, window_height);
     if(resize_buffer)
         glfwSetFramebufferSizeCallback(window, ResizeWindow);
-
+    
     Model gun = CreateMesh("BG60.obj");
-    gun.Scale(glm::vec3(0.5,0.5,0.5));
-    gun.Translate(glm::vec3(0, 0, 0));
+    gun.Scale(glm::vec3(0.3,0.3,0.3));
+    gun.Translate(glm::vec3(1, 0, 0));
+
+    Model suzanne = CreateMesh("Suzanne.obj");
+    suzanne.Translate(glm::vec3(-1, 0, 0));
+
+    Model suzanne2 = CreateMesh("Suzanne.obj");
+    suzanne2.Scale(glm::vec3(0.1, 0.1, 0.1));
     
     float angle = 0.0f;
     
@@ -111,7 +117,12 @@ int main(int argc, char* argv[])
         RenderLoop();
 
         gun.Draw();
+
+        suzanne.Draw();
         gun.Rotate(angle, GLOBAL_UP_VECTOR);
+
+        suzanne2.Draw();
+        suzanne2.Rotate(angle, GLOBAL_UP_VECTOR);
         
         
         glfwPollEvents();
