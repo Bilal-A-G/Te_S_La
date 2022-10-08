@@ -40,11 +40,11 @@ std::cout << "Sent to buffer: " << m_vertices.size() << " vertices, " << m_indic
 
 void Mesh::Draw()
 {
+    glUseProgram(m_shaderProgram);
     UpdateMVPMatrix();
     
-    glUseProgram(m_shaderProgram);
     glBindVertexArray(m_vao);
-    glDrawElements(GL_TRIANGLES, m_vertices.size() * 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 

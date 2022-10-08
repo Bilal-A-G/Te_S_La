@@ -36,7 +36,7 @@ void LogGLFWErrors(int id, const char* error_message)
 //Checks for key presses and does stuff with them
 void ProcessInput(GLFWwindow* window)
 {
-    if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 }
 
 Model CreateMesh(const char* fileName)
@@ -98,10 +98,8 @@ int main(int argc, char* argv[])
     gun.Translate(glm::vec3(1, 0, 0));
 
     Model suzanne = CreateMesh("Suzanne.obj");
+    suzanne.Scale(glm::vec3(0.5, 0.5, 0.5));
     suzanne.Translate(glm::vec3(-1, 0, 0));
-
-    Model suzanne2 = CreateMesh("Suzanne.obj");
-    suzanne2.Scale(glm::vec3(0.1, 0.1, 0.1));
     
     float angle = 0.0f;
     
@@ -117,13 +115,8 @@ int main(int argc, char* argv[])
         RenderLoop();
 
         gun.Draw();
-
-        suzanne.Draw();
         gun.Rotate(angle, GLOBAL_UP_VECTOR);
-
-        suzanne2.Draw();
-        suzanne2.Rotate(angle, GLOBAL_UP_VECTOR);
-        
+        suzanne.Draw();
         
         glfwPollEvents();
     }
