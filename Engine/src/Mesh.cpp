@@ -1,5 +1,5 @@
 ﻿#include "Mesh.h"
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
 #include <iostream>
 #endif
 
@@ -30,7 +30,7 @@ void Mesh::SetupGLObjects()
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
 std::cout << "Sent to buffer: " << m_vertices.size() << " vertices, " << m_indices.size() << " indices \n";
 #endif
 

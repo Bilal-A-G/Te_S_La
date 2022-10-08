@@ -2,7 +2,7 @@
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
 #include <iostream>
 #endif
 #include <string>
@@ -17,7 +17,7 @@ void Model::LoadModel(const char* fileName)
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         std::cout << "Assimp failed to load mesh: " << importer.GetErrorString() << "\n";
@@ -48,7 +48,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
         m_meshes.push_back(ProcessMesh(mesh, scene));
     }
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
     std::cout << "Loaded " << m_meshes.size() << " meshes \n";
 #endif
 

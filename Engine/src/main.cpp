@@ -4,7 +4,8 @@
 
 #include<iostream>
 
-//This file is the entry point of the entire application, TODO: move entry point somewhere else, like in Cherno's game engine series
+//This file is the entry point of the entire application
+//TODO: move entry point somewhere else, like in Cherno's game engine series
 
 #define GLOBAL_UP_VECTOR glm::vec3(0, 1, 0)
 
@@ -28,7 +29,7 @@ void ResizeWindow(GLFWwindow* window, int width, int height)
 
 void LogGLFWErrors(int id, const char* error_message)
 {
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
     std::cout << error_message << " ID = " << id << "\n";
 #endif
 }
@@ -47,7 +48,7 @@ Model CreateMesh(const char* fileName)
     Shader basicShader;
     const GLuint shaderProgram = basicShader.GetProgram();
 
-    return Model(fileName, shaderProgram, view, projection);
+    return Model{fileName, shaderProgram, view, projection};
 }
 
 //Handles all common rendering operations, things that need to be done before drawing a mesh
@@ -65,27 +66,27 @@ int main(int argc, char* argv[])
     glfwSetErrorCallback(LogGLFWErrors);
     glfwInit()
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
         == GLFW_TRUE ?
             std::cout << "GLFW initialized \n" : std::cout <<"GLFW failed to initialize \n";
-#elif PS_RELEASE
+#elif TS_RELEASE
     ;
 #endif
     
     GLFWwindow* window = glfwCreateWindow(window_width, window_height, "My Super Cool Window", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
     window == nullptr ? std::cout << "Failed to create window \n" : std::cout <<"Window successfully created \n";
 #endif
 
     //Checking if glad is working or not
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
         == false ?
             std::cout << "Failed to load GLAD \n" : std::cout <<"GLAD loaded successfully \n";
-#elif PS_RELEASE
+#elif TS_RELEASE
     ;
 #endif
 

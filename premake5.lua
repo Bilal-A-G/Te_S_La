@@ -1,4 +1,4 @@
-workspace "Project-Scientia"
+workspace "Te_S_La"
     architecture "x64"
 
     configurations
@@ -8,15 +8,14 @@ workspace "Project-Scientia"
     }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-assimpver = "vc142"
 
 project "Engine"
     location "Engine"
-    kind "ConsoleApp"
+    kind "SharedLib"
     language "C++"
 
-    targetdir ("bin/" .. outputdir)
-    objdir ("int/" .. outputdir)
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("int/" .. outputdir .. "/%{prj.name}")
     libdirs("%{prj.name}/lib")
     includedirs("%{prj.name}/include")
 
@@ -44,18 +43,68 @@ project "Engine"
 
         defines
         {
-            "PS_WIN"
+            "TS_WIN",
+            "TS_ENGINE"
         }
 
         postbuildcommands
         {
-            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir)
+            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/%{prj.name}")
         }
 
     filter "configurations:Debug"
-        defines "PS_DEBUG"
+        defines "TS_DEBUG"
         symbols "On"
 
     filter "configurations:Release"
-        defines "PS_RELEASE"
+        defines "TS_RELEASE"
+        optimize "On"
+
+project "Game"
+    location "Game"
+    kind "ConsoleApp"
+    language "C++"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("int/" .. outputdir .. "/%{prj.name}")
+    includedirs
+    {
+        "Engine/src",
+    }
+
+
+    files
+    {
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
+        "%{prj.name}/**.c",
+        "%{prj.name}/**.glsl"
+    }
+
+    links
+    {
+        "Engine"
+    }
+
+    filter "system:windows"
+        cppdialect "C++17"
+        staticruntime "On"
+        systemversion "latest"
+
+        defines
+        {
+            "TS_WIN"
+        }
+
+        postbuildcommands
+        {
+            ("{Copy} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/%{prj.name}")
+        }
+
+    filter "configurations:Debug"
+        defines "TS_DEBUG"
+        symbols "On"
+
+    filter "configurations:Release"
+        defines "TS_RELEASE"
         optimize "On"

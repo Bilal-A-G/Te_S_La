@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
 #include <iostream>
 #endif
 
@@ -45,7 +45,7 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     }
     catch (std::ifstream::failure &_)
     {
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
         std::cout << "Failed to read from or open file \n";
 #endif
     }
@@ -56,7 +56,7 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     const GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
     int success;
     const char* shader_type;
     
@@ -101,7 +101,7 @@ GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
 
     glLinkProgram(shader_program);
 
-#ifdef PS_DEBUG
+#ifdef TS_DEBUG
     int success;
     
     glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
