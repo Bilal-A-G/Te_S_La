@@ -19,13 +19,13 @@ void Mesh::SetupGLObjects()
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(short) * m_indices.size(), m_indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * m_indices.size(), m_indices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, nullptr);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(sizeof(float) * 3));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -35,6 +35,7 @@ std::cout << "Sent to buffer: " << m_vertices.size() << " vertices, " << m_indic
 #endif
 
     m_vao = vao;
+    glBindVertexArray(0);
 }
 
 void Mesh::Draw()
@@ -43,7 +44,7 @@ void Mesh::Draw()
     
     glUseProgram(m_shaderProgram);
     glBindVertexArray(m_vao);
-    glDrawElements(GL_TRIANGLES, m_vertices.size(), GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLES, m_vertices.size() * 3, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 
@@ -64,7 +65,8 @@ void Mesh::Translate(glm::vec3 translation)
     m_positionMatrix = glm::translate(IDENTITY_MAT, translation);
 }
 
-//Updates the model view projection matrix uniform in the vertex shader TODO: move matrix multiplications into the vertex shader file, so it's done on the GPU instead of the CPU
+//Updates the model view projection matrix uniform in the vertex shader
+//TODO: move matrix multiplications into the vertex shader file, so it's done on the GPU instead of the CPU
 void Mesh::UpdateMVPMatrix()
 {
     const GLint mvp_location = glGetUniformLocation(m_shaderProgram, "MVP");

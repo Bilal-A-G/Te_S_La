@@ -11,13 +11,14 @@
 struct Vertex
 {
     std::array<float, 3> position;
-    std::array<float, 3> colour;
+    std::array<float, 3> normal;
+    std::array<float, 2> uv;
 };
 
 class Mesh
 {
 public:
-    Mesh(const std::vector<float> &vertices, const std::vector<short> &indices, const GLuint& shaderProgram, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const GLuint& shaderProgram, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
     {
         m_vertices = vertices;
         m_indices = indices;
@@ -40,8 +41,8 @@ private:
     void SetupGLObjects();
     void UpdateMVPMatrix();
     
-    std::vector<float> m_vertices;
-    std::vector<short> m_indices;
+    std::vector<Vertex> m_vertices;
+    std::vector<unsigned int> m_indices;
     GLuint m_shaderProgram;
     GLuint m_vao;
 

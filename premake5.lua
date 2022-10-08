@@ -8,6 +8,7 @@ workspace "Project-Scientia"
     }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+assimpver = "vc142"
 
 project "Engine"
     location "Engine"
@@ -44,6 +45,11 @@ project "Engine"
         defines
         {
             "PS_WIN"
+        }
+
+        postbuildcommands
+        {
+            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir)
         }
 
     filter "configurations:Debug"

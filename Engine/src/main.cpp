@@ -1,10 +1,10 @@
 #include "Shader.h"
-#include "Mesh.h"
+#include "Model.h"
 #include"GLFW/glfw3.h"
 
 #include<iostream>
 
-//This file is the entry point of the entire application, TODO: move entry point somewhere else
+//This file is the entry point of the entire application, TODO: move entry point somewhere else, like in Cherno's game engine series
 
 #define GLOBAL_UP_VECTOR glm::vec3(0, 1, 0)
 
@@ -13,10 +13,6 @@ float farPlane = 200.0f;
 
 int window_height = 800;
 int window_width = 1200;
-
-constexpr float mesh_width = 1.0f;
-constexpr float mesh_height = 1.0f;
-constexpr float mesh_length = 1.0f;
 
 constexpr bool resize_buffer = true;
 
@@ -40,58 +36,18 @@ void LogGLFWErrors(int id, const char* error_message)
 //Checks for key presses and does stuff with them
 void ProcessInput(GLFWwindow* window)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+    if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 }
 
-Mesh CreateMesh()
+Model CreateMesh(const char* fileName)
 {
     const glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(window_width)/static_cast<float>(window_height), nearPlane, farPlane);
     const glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBAL_UP_VECTOR);
     
-    const std::vector<float> vertices
-    {
-        -mesh_width/2, mesh_height/2, mesh_length/2, 1.0f, 0.0f, 0.0f,
-        mesh_width/2, mesh_height/2, mesh_length/2, 0.0f, 1.0f, 0.0f,
-        -mesh_width/2, -mesh_height/2, mesh_length/2, 0.0f, 1.0f, 0.0f,
-        mesh_width/2, -mesh_height/2, mesh_length/2, 0.0f, 0.0f, 1.0f,
-
-        -mesh_width/2, mesh_height/2, -mesh_length/2, 1.0f, 0.0f, 0.0f,
-        mesh_width/2, mesh_height/2, -mesh_length/2, 0.0f, 1.0f, 0.0f,
-        -mesh_width/2, -mesh_height/2, -mesh_length/2, 0.0f, 1.0f, 0.0f,
-        mesh_width/2, -mesh_height/2, -mesh_length/2, 0.0f, 0.0f, 1.0f
-    };
-
-    const std::vector<short> indices
-    {
-        //Front face
-        0, 1, 2,
-        1, 3, 2,
-
-        //Back face
-        4, 5, 6,
-        5, 7, 6,
-
-        //Right face
-        1, 5, 3,
-        5, 7, 3,
-
-        //Left face
-        0, 4, 6,
-        6, 2, 0,
-
-        //Top face
-        4, 5, 1,
-        1, 0, 4,
-
-        //Bottom face
-        3, 7, 6,
-        6, 2, 3,
-    };
-
     Shader basicShader;
     const GLuint shaderProgram = basicShader.GetProgram();
-    
-    return Mesh(vertices, indices, shaderProgram, view, projection);
+
+    return Model(fileName, shaderProgram, view, projection);
 }
 
 //Handles all common rendering operations, things that need to be done before drawing a mesh
@@ -137,12 +93,10 @@ int main(int argc, char* argv[])
     if(resize_buffer)
         glfwSetFramebufferSizeCallback(window, ResizeWindow);
 
-    Mesh mesh = CreateMesh();
-    mesh.Translate(glm::vec3(-0.5, -0.5, -2));
-
-    Mesh mesh2 = CreateMesh();
-    mesh2.Translate(glm::vec3(-0.6, 0, 1));
-
+    Model gun = CreateMesh("BG60.obj");
+    gun.Scale(glm::vec3(0.5,0.5,0.5));
+    gun.Translate(glm::vec3(0, 0, 0));
+    
     float angle = 0.0f;
     
     while (!glfwWindowShouldClose(window))
@@ -155,9 +109,10 @@ int main(int argc, char* argv[])
         ProcessInput(window);
 
         RenderLoop();
-        mesh.Rotate(angle, GLOBAL_UP_VECTOR);
-        mesh.Draw();
-        mesh2.Draw();
+
+        gun.Draw();
+        gun.Rotate(angle, GLOBAL_UP_VECTOR);
+        
         
         glfwPollEvents();
     }
