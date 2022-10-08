@@ -48,7 +48,7 @@ void Init()
 #elif TS_RELEASE
     ;
 #endif
-    window = glfwCreateWindow(window_width, window_height, "My cool client side window", nullptr, nullptr);
+    window = glfwCreateWindow(window_width, window_height, "Game", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
 #ifdef TS_DEBUG
@@ -106,5 +106,6 @@ void CleanUp()
 
     delete suzanne;
     suzanne = nullptr;
+    
     glfwTerminate();
 }

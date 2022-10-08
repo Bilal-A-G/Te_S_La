@@ -18,7 +18,11 @@ project "Engine"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("int/" .. outputdir .. "/%{prj.name}")
     libdirs("%{prj.name}/lib")
-    includedirs("%{prj.name}/include")
+    includedirs
+    {
+        "%{prj.name}/include",
+        "external"
+    }
 
 
     files
@@ -73,7 +77,8 @@ project "Game"
     includedirs
     {
         "Engine/src",
-        "Engine/include"
+        "Engine/include",
+        "external"
     }
 
     libdirs("Engine/lib")
