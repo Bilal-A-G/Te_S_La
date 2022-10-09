@@ -1,5 +1,4 @@
-﻿#include "iostream"
-#include "Te_S_La.h"
+﻿#include "Te_S_La.h"
 #include "GLFW/glfw3.h"
 
 GLFWwindow* window;
@@ -17,9 +16,7 @@ TESLA::Model* suzanne;
 
 void LogGLFWErrors(int id, const char* error_message)
 {
-#ifdef TS_DEBUG
-    std::cout << error_message << " ID = " << id << "\n";
-#endif
+    TS_LOG_MESSAGE(spdlog::level::err, "GLFW error: {0}, ID = {1}", error_message, id);
 }
 void ResizeWindow(GLFWwindow* _, int width, int height)
 {
@@ -40,30 +37,20 @@ TESLA::Model* CreateMesh(const char* fileName)
 void Init()
 {
     glfwSetErrorCallback(LogGLFWErrors);
-    glfwInit()
-
-#ifdef TS_DEBUG
-        == GLFW_TRUE ?
-            std::cout << "GLFW initialized \n" : std::cout <<"GLFW failed to initialize \n";
-#elif TS_RELEASE
-    ;
-#endif
+    glfwInit() ?
+        TS_LOG_MESSAGE(spdlog::level::info, "GLFW successfully intialized"): TS_LOG_MESSAGE(spdlog::level::err, "GLFW failed to initialize");
+    
     window = glfwCreateWindow(window_width, window_height, "Game", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-#ifdef TS_DEBUG
-    window == nullptr ? std::cout << "Failed to create window \n" : std::cout <<"Window successfully created \n";
-#endif
+    window == nullptr ?
+        TS_LOG_MESSAGE(spdlog::level::err, "Failed to create a window"): TS_LOG_MESSAGE(spdlog::level::info, "Successfully created a window");
+
 
     //Checking if glad is working or not
-    TESLA::GLADWrapper::LoadGLAD(glfwGetProcAddress)
+    TESLA::GLADWrapper::LoadGLAD(glfwGetProcAddress) == false ?
+        TS_LOG_MESSAGE(spdlog::level::err, "Failed to initialize GLAD"): TS_LOG_MESSAGE(spdlog::level::info, "Successfully initialized GLAD");
 
-#ifdef TS_DEBUG
-        == false ?
-            std::cout << "Failed to load GLAD \n" : std::cout <<"GLAD loaded successfully \n";
-#elif TS_RELEASE
-    ;
-#endif
 
     TESLA::GLADWrapper::UpdateViewport(window_width, window_height);
     glfwSetFramebufferSizeCallback(window, ResizeWindow);

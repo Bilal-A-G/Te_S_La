@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 #ifdef TS_DEBUG
-#include <iostream>
+#include "Logger.h"
 #endif
 
 namespace TESLA
@@ -47,9 +47,7 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     }
     catch (std::ifstream::failure &_)
     {
-#ifdef TS_DEBUG
-        std::cout << "Failed to read from or open file \n";
-#endif
+        TS_LOG_MESSAGE(spdlog::level::err, "Failed to read from or open shader file");
     }
     
     const char* source;
@@ -80,11 +78,11 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     {
         char infolog[512];
         glGetShaderInfoLog(shader, 512, nullptr, infolog);
-        std::cout << shader_type << " failed to compile " << infolog << "\n";
+        TS_LOG_MESSAGE(spdlog::level::err, "Failed to compile {0}: {1}", shader_type, infolog);
     }
     else
     {
-        std::cout << shader_type << " successfully compiled " << "\n";
+        TS_LOG_MESSAGE(spdlog::level::info, "Compiled {0} successfully", shader_type);
     }
 #endif
     return shader;
@@ -111,11 +109,11 @@ GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
     {
         char infolog[512];
         glGetProgramInfoLog(shader_program, 512, nullptr, infolog);
-        std::cout << "Shader program failed to link " << infolog << "\n";
+        TS_LOG_MESSAGE(spdlog::level::err, "Failed to link shader program {0}: {1}", shader_program, infolog);
     }
     else
     {
-        std::cout << "Shader program successfully linked " << "\n";
+        TS_LOG_MESSAGE(spdlog::level::info, "Shader program {0} successfully linked", shader_program);
     }
 #endif
     return shader_program;

@@ -1,4 +1,5 @@
 #pragma once
+#include "../utils/Logger.h"
 
 inline bool runApplication = true;
 
@@ -16,6 +17,9 @@ extern void CleanUp();
 
 int main(int argc, char* argv[])
 {
+    TESLA::Logger::Init();
+    TS_LOG_MESSAGE(spdlog::level::info, "Initialization successful");
+    
     Init();
 
     while (runApplication)

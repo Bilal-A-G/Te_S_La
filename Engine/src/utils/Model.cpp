@@ -3,7 +3,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #ifdef TS_DEBUG
-#include <iostream>
+#include "Logger.h"
 #endif
 #include <string>
 
@@ -18,18 +18,14 @@ void Model::LoadModel(const char* fileName)
     const std::string filePath = resourcesPath + fileName;
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
-
-#ifdef TS_DEBUG
+    
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        std::cout << "Assimp failed to load mesh: " << importer.GetErrorString() << "\n";
+        TS_LOG_MESSAGE(spdlog::level::err, "Assimp failed to load mesh: {0}", importer.GetErrorString());
         return;
     }
-    else
-    {
-        std::cout << "Successfully loaded mesh: " << fileName << "\n";
-    }
-#endif
+    
+    TS_LOG_MESSAGE(spdlog::level::info, "Successfully loaded mesh: {0}", fileName);
 
     ProcessNode(scene->mRootNode, scene);
 }
@@ -50,9 +46,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
         m_meshes.push_back(ProcessMesh(mesh, scene));
     }
 
-#ifdef TS_DEBUG
-    std::cout << "Loaded " << m_meshes.size() << " meshes \n";
-#endif
+    TS_LOG_MESSAGE(spdlog::level::info, "Loaded: {0} meshes", m_meshes.size());
 
     for (unsigned int i = 0; i < node->mNumChildren; ++i)
     {

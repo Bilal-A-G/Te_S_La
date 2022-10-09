@@ -1,6 +1,6 @@
 ﻿#include "Mesh.h"
 #ifdef TS_DEBUG
-#include <iostream>
+#include "Logger.h"
 #endif
 
 namespace TESLA
@@ -30,10 +30,8 @@ void Mesh::SetupGLObjects()
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-
-#ifdef TS_DEBUG
-std::cout << "Sent to buffer: " << m_vertices.size() << " vertices, " << m_indices.size() << " indices \n";
-#endif
+    
+    TS_LOG_MESSAGE(spdlog::level::info, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
 
     m_vao = vao;
 }
