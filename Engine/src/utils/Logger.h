@@ -18,6 +18,16 @@ namespace TESLA
     };
 }
 
+namespace TESLA_LOGGER
+{
+    constexpr spdlog::level::level_enum WARN = spdlog::level::warn;
+    constexpr spdlog::level::level_enum INFO = spdlog::level::info;
+    constexpr spdlog::level::level_enum TRACE = spdlog::level::trace;
+    constexpr spdlog::level::level_enum DEBUG = spdlog::level::debug;
+    constexpr spdlog::level::level_enum CRITICAL = spdlog::level::critical;
+    constexpr spdlog::level::level_enum ERR = spdlog::level::err;
+}
+
 #ifdef TS_DEBUG
 #ifdef TS_ENGINE
 #define TS_LOG_MESSAGE(...) ::TESLA::Logger::GetEngineLogger()->log(__VA_ARGS__)

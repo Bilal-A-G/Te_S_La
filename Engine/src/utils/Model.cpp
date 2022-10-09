@@ -19,11 +19,11 @@ void Model::LoadModel(const char* fileName)
     
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        TS_LOG_MESSAGE(spdlog::level::err, "Assimp failed to load mesh: {0}", importer.GetErrorString());
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "Assimp failed to load mesh: {0}", importer.GetErrorString());
         return;
     }
     
-    TS_LOG_MESSAGE(spdlog::level::info, "Successfully loaded mesh: {0}", fileName);
+    TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Successfully loaded mesh: {0}", fileName);
 
     ProcessNode(scene->mRootNode, scene);
 }
@@ -44,7 +44,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
         m_meshes.push_back(ProcessMesh(mesh, scene));
     }
 
-    TS_LOG_MESSAGE(spdlog::level::info, "Loaded: {0} meshes", m_meshes.size());
+    TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Loaded: {0} meshes", m_meshes.size());
 
     for (unsigned int i = 0; i < node->mNumChildren; ++i)
     {

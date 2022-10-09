@@ -14,7 +14,7 @@ float angle = 0.0f;
 TESLA::Model* gun;
 TESLA::Model* suzanne;
 
-void LogGLFWErrors(int id, const char* error_message) {TS_LOG_MESSAGE(spdlog::level::err, "GLFW error: {0}, ID = {1}", error_message, id);}
+void LogGLFWErrors(int id, const char* error_message) {TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "GLFW error: {0}, ID = {1}", error_message, id);}
 void ResizeWindow(GLFWwindow* _, int width, int height) {TESLA::GLADWrapper::UpdateViewport(width, height);}
 
 TESLA::Model* CreateMesh(const char* fileName)
@@ -32,24 +32,24 @@ void Init()
 {
     glfwSetErrorCallback(LogGLFWErrors);
     if(glfwInit())
-        TS_LOG_MESSAGE(spdlog::level::info, "GLFW successfully intialized");
+        TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "GLFW successfully intialized");
     else
-        TS_LOG_MESSAGE(spdlog::level::err, "GLFW failed to initialize"); 
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "GLFW failed to initialize"); 
     
     window = glfwCreateWindow(window_width, window_height, "Game", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
     if(window == nullptr)
-        TS_LOG_MESSAGE(spdlog::level::err, "Failed to create a window");
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "Failed to create a window");
     else
-        TS_LOG_MESSAGE(spdlog::level::info, "Successfully created a window");
+        TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Successfully created a window");
 
 
     //Checking if GLAD is working or not
     if(TESLA::GLADWrapper::LoadGLAD(glfwGetProcAddress) == false)
-        TS_LOG_MESSAGE(spdlog::level::err, "Failed to initialize GLAD");
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "Failed to initialize GLAD");
     else
-        TS_LOG_MESSAGE(spdlog::level::info, "Successfully initialized GLAD");
+        TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Successfully initialized GLAD");
 
 
     TESLA::GLADWrapper::UpdateViewport(window_width, window_height);

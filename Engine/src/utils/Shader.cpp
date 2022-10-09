@@ -9,8 +9,9 @@
 namespace TESLA
 {
     constexpr short num_shaders = 2;
-const char* vertex_shader_source_path = "./src/shader_src/vertex.glsl";
-const char* fragment_shader_source_path = "./src/shader_src/fragment.glsl";
+    
+    const char* vertex_shader_source_path = "../Engine/src/shader_src/vertex.glsl";
+    const char* fragment_shader_source_path = "../Engine/src/shader_src/fragment.glsl";
 
 //Returns a shader program
 GLuint Shader::GetProgram()
@@ -45,7 +46,7 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     }
     catch (std::ifstream::failure &_)
     {
-        TS_LOG_MESSAGE(spdlog::level::err, "Failed to read from or open shader file");
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "Failed to read from or open shader file");
     }
     
     const char* source;
@@ -76,11 +77,11 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     {
         char infolog[512];
         glGetShaderInfoLog(shader, 512, nullptr, infolog);
-        TS_LOG_MESSAGE(spdlog::level::err, "Failed to compile {0}: {1}", shader_type, infolog);
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "Failed to compile {0}: {1}", shader_type, infolog);
     }
     else
     {
-        TS_LOG_MESSAGE(spdlog::level::info, "Compiled {0} successfully", shader_type);
+        TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Compiled {0} successfully", shader_type);
     }
 #endif
     return shader;
@@ -107,11 +108,11 @@ GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
     {
         char infolog[512];
         glGetProgramInfoLog(shader_program, 512, nullptr, infolog);
-        TS_LOG_MESSAGE(spdlog::level::err, "Failed to link shader program: {1}", infolog);
+        TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "Failed to link shader program: {1}", infolog);
     }
     else
     {
-        TS_LOG_MESSAGE(spdlog::level::info, "Shader program successfully linked");
+        TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Shader program successfully linked");
     }
 #endif
     return shader_program;

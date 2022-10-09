@@ -29,7 +29,7 @@ void Mesh::SetupGLObjects()
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     
-    TS_LOG_MESSAGE(spdlog::level::info, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
+    TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
 
     m_vao = vao;
 }
