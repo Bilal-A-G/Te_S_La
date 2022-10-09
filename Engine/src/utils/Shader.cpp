@@ -109,11 +109,11 @@ GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
     {
         char infolog[512];
         glGetProgramInfoLog(shader_program, 512, nullptr, infolog);
-        TS_LOG_MESSAGE(spdlog::level::err, "Failed to link shader program {0}: {1}", shader_program, infolog);
+        TS_LOG_MESSAGE(spdlog::level::err, "Failed to link shader program: {1}", infolog);
     }
     else
     {
-        TS_LOG_MESSAGE(spdlog::level::info, "Shader program {0} successfully linked", shader_program);
+        TS_LOG_MESSAGE(spdlog::level::info, "Shader program successfully linked");
     }
 #endif
     return shader_program;

@@ -14,14 +14,8 @@ float angle = 0.0f;
 TESLA::Model* gun;
 TESLA::Model* suzanne;
 
-void LogGLFWErrors(int id, const char* error_message)
-{
-    TS_LOG_MESSAGE(spdlog::level::err, "GLFW error: {0}, ID = {1}", error_message, id);
-}
-void ResizeWindow(GLFWwindow* _, int width, int height)
-{
-    TESLA::GLADWrapper::UpdateViewport(width, height);
-}
+void LogGLFWErrors(int id, const char* error_message){TS_LOG_MESSAGE(spdlog::level::err, "GLFW error: {0}, ID = {1}", error_message, id);}
+void ResizeWindow(GLFWwindow* _, int width, int height){TESLA::GLADWrapper::UpdateViewport(width, height);}
 
 TESLA::Model* CreateMesh(const char* fileName)
 {
