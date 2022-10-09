@@ -2,9 +2,7 @@
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
-#ifdef TS_DEBUG
 #include "Logger.h"
-#endif
 #include <string>
 
 //This class is basically a group of meshes that exists to more easily interact with assimp

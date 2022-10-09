@@ -1,7 +1,5 @@
 ﻿#include "Mesh.h"
-#ifdef TS_DEBUG
 #include "Logger.h"
-#endif
 
 namespace TESLA
 {

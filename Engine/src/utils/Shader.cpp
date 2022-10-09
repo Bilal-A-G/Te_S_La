@@ -4,9 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#ifdef TS_DEBUG
 #include "Logger.h"
-#endif
 
 namespace TESLA
 {
