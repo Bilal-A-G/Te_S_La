@@ -7,7 +7,8 @@ namespace TESLA
     class TS_DLL Model
     {
     public:
-        Model(const char* fileName, const GLuint& shaderProgram, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
+        Model(const char* fileName, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+            : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_shaderProgram = shaderProgram;
             m_projectionMatrix = projectionMatrix;
@@ -31,7 +32,7 @@ namespace TESLA
 
         GLuint m_shaderProgram;
     
-        glm::mat4 m_viewMatrix;
-        glm::mat4 m_projectionMatrix;
+        glm::mat4& m_viewMatrix;
+        glm::mat4& m_projectionMatrix;
     };
 }

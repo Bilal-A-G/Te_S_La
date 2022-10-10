@@ -22,7 +22,8 @@ namespace TESLA
     class TS_DLL Mesh
     {
     public:
-        Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const GLuint& shaderProgram, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
+        Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+            : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_vertices = vertices;
             m_indices = indices;
@@ -54,8 +55,8 @@ namespace TESLA
         glm::mat4 m_rotationMatrix = IDENTITY_MAT;
         glm::mat4 m_positionMatrix = IDENTITY_MAT;
     
-        glm::mat4 m_viewMatrix;
-        glm::mat4 m_projectionMatrix;
+        glm::mat4& m_viewMatrix;
+        glm::mat4& m_projectionMatrix;
     };
 }
 

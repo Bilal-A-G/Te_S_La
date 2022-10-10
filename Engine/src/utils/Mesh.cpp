@@ -65,10 +65,14 @@ void Mesh::Translate(glm::vec3 translation)
 //TODO: move matrix multiplications into the vertex shader file, so it's done on the GPU instead of the CPU
 void Mesh::UpdateMVPMatrix()
 {
-    const GLint mvp_location = glGetUniformLocation(m_shaderProgram, "MVP");
-    glm::mat4 mvpMatrix = m_projectionMatrix * m_viewMatrix * (m_positionMatrix * m_rotationMatrix * m_scaleMatrix);
+    const GLint modelLocation = glGetUniformLocation(m_shaderProgram, "model");
+    const GLint viewLocation = glGetUniformLocation(m_shaderProgram, "view");
+    const GLint projectionLocation = glGetUniformLocation(m_shaderProgram, "projection");
     
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvpMatrix[0][0]);
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &(m_positionMatrix * m_rotationMatrix * m_scaleMatrix)[0][0]);
+    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &m_viewMatrix[0][0]);
+    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_projectionMatrix[0][0]);
+
 }
 }
 

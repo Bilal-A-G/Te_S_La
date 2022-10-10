@@ -3,7 +3,8 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 #include "Te_S_La.h"
-#include "GLFW/glfw3.h"
+#include "CameraMovement.h"
+
 
 GLFWwindow* window;
 int window_height = 800;
@@ -14,14 +15,14 @@ float farPlane = 200.0f;
 
 #define GLOBAL_UP_VECTOR glm::vec3(0, 1, 0)
 
+glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(window_width)/static_cast<float>(window_height), nearPlane, farPlane);
+glm::mat4 view = glm::mat4(0);
+
 void LogGLFWErrors(int id, const char* error_message) {TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "GLFW error: {0}, ID = {1}", error_message, id);}
 void ResizeWindow(GLFWwindow* _, int width, int height) {TESLA::GLADWrapper::UpdateViewport(width, height);}
 
 TESLA::Model* ImportModel(const char* fileName)
 {
-    const glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(window_width)/static_cast<float>(window_height), nearPlane, farPlane);
-    const glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBAL_UP_VECTOR);
-    
     TESLA::Shader basicShader;
     GLuint shaderProgram = basicShader.GetProgram();
 
@@ -56,30 +57,54 @@ void Init()
     glfwSetFramebufferSizeCallback(window, ResizeWindow);
 
     sceneObjects.push_back(ImportModel("cube.obj"));
-    sceneObjects[0]->Translate(glm::vec3(0, -2, 0));
-    sceneObjects[0]->Scale(glm::vec3(100, 1, 100));
+    sceneObjects[0]->Translate(glm::vec3(0, -1, 0));
+
+    sceneObjects.push_back(ImportModel("cube.obj"));
+    sceneObjects[1] ->Translate(glm::vec3(1, 1, 1));
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void)io;
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-    
 }
 
 void Render()
 {
     glfwSwapBuffers(window);
     TESLA::GLADWrapper::OpenGLRender();
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    if(!ImGui::GetIO().WantCaptureMouse)
+    {
+        if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(window))
+            TESLA::ExitApplication();
+        view = CameraMovement::Look(window);
+    }
+    else
+    {
+        glfwSetMouseButtonCallback(window, ImGui_ImplGlfw_MouseButtonCallback);
+    }
     
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(window))
-        TESLA::ExitApplication();
-
     for (TESLA::Model* model : sceneObjects)
+    {
         model->Draw();
+    }
 
+    ImGui::Begin("Create");
+    if(ImGui::Button("Create Object"))
+    {
+        ImGui::Text("You created a new cube");
+    }
+    ImGui::End();
+
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    
     glfwPollEvents();
 }
 
@@ -90,6 +115,10 @@ void CleanUp()
     for(TESLA::Model* model : sceneObjects)
         delete model;
 
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    
     sceneObjects.clear();
     
     glfwTerminate();

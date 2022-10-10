@@ -78,8 +78,8 @@ void Render()
     angle += 1;
     if(angle > 360) angle = 0.0f;
     
-    gun->Draw();
-    gun->Rotate(angle, GLOBAL_UP_VECTOR);
+    //gun->Draw();
+    //gun->Rotate(angle, GLOBAL_UP_VECTOR);
 
     suzanne->Draw();
 
