@@ -22,6 +22,8 @@ namespace TESLA
     class TS_DLL Mesh
     {
     public:
+        glm::vec3 position = glm::vec3(0);
+        
         Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {

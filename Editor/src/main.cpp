@@ -4,6 +4,7 @@
 
 #include "Te_S_La.h"
 #include "Camera.h"
+#include "utils/Physics.h"
 
 
 GLFWwindow* window;
@@ -59,7 +60,7 @@ void Init()
     glfwSetFramebufferSizeCallback(window, ResizeWindow);
 
     sceneObjects.push_back(ImportModel("cube.obj", "Cube 1"));
-    sceneObjects[0]->Translate(glm::vec3(0, -1, 0));
+    sceneObjects[0]->Translate(glm::vec3(0, 0, 0));
 
     sceneObjects.push_back(ImportModel("cube.obj", "Cube 2"));
     sceneObjects[1] ->Translate(glm::vec3(2, 2, 2));
@@ -71,6 +72,14 @@ void Init()
     ImGui_ImplOpenGL3_Init("#version 330");
 
     defaultFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("./res/jetbrains.ttf", 15);
+    
+    TESLA_PHYSICS::RaycastResult result;
+    
+    if (TESLA_PHYSICS::Raycaster::Raycast(glm::vec3(0, 10, 0), glm::vec3(0, -1, 0),
+        100, 1000, sceneObjects, result))
+    {
+        TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
+    }
 }
 
 void Render()

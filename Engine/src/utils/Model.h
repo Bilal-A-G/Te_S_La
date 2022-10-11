@@ -24,6 +24,7 @@ namespace TESLA
         void Translate(glm::vec3 translation);
         void Rotate(float angle, glm::vec3 upVector);
         void Scale(glm::vec3 scale);
+        const std::vector<Mesh>& GetMeshes(){return m_meshes;}
     
     private:
         void LoadModel(const char* fileName);

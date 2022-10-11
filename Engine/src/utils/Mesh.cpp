@@ -59,6 +59,7 @@ void Mesh::Scale(glm::vec3 scale)
 void Mesh::Translate(glm::vec3 translation)
 {
     m_positionMatrix = glm::translate(IDENTITY_MAT, translation);
+    position = translation;
 }
 
 //Updates the model view projection matrix uniform in the vertex shader
