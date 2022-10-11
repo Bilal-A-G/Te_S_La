@@ -1,8 +1,7 @@
-﻿#include "CameraMovement.h"
+﻿#include "Camera.h"
 
 #include <glm/ext/matrix_transform.hpp>
 #include <imgui/imgui_impl_glfw.h>
-#include "utils/Logger.h"
 
 glm::vec3 globalUpVector = glm::vec3(0, 1, 0);
 glm::vec3 cameraPosition = glm::vec3(1.5f, 1.0f, 1.5f);
@@ -55,10 +54,10 @@ void MouseCallback(GLFWwindow* window, int button, int action, int mods)
     }
 }
 
-glm::mat4 CameraMovement::Look(GLFWwindow* window)
+glm::mat4 Camera::CalculateView(GLFWwindow* window)
 {
     deltaTime = glfwGetTime() - timeLastFrame;
-
+    
     glfwSetMouseButtonCallback(window, MouseCallback);
     
     glm::vec3 cameraDirection;
@@ -72,6 +71,12 @@ glm::mat4 CameraMovement::Look(GLFWwindow* window)
     const glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
 
     const float cameraSpeed = moveSpeed * deltaTime;
+
+    if(ImGui::GetIO().WantCaptureKeyboard)
+    {
+        focused = true;
+        return glm::mat4(1);
+    }
     
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPosition += cameraDirection * cameraSpeed;
@@ -84,9 +89,9 @@ glm::mat4 CameraMovement::Look(GLFWwindow* window)
         cameraPosition -= cameraRight * cameraSpeed;
     
     if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        cameraPosition -= cameraUp * cameraSpeed;
-    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         cameraPosition += cameraUp * cameraSpeed;
+    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        cameraPosition -= cameraUp * cameraSpeed;
 
     timeLastFrame = glfwGetTime();
     

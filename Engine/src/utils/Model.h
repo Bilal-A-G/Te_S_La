@@ -7,12 +7,14 @@ namespace TESLA
     class TS_DLL Model
     {
     public:
-        Model(const char* fileName, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+        std::string name;
+        Model(const char* fileName, const char* modelname, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_shaderProgram = shaderProgram;
             m_projectionMatrix = projectionMatrix;
             m_viewMatrix = viewMatrix;
+            name = modelname;
 
             LoadModel(fileName);
         }
