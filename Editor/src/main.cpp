@@ -72,14 +72,6 @@ void Init()
     ImGui_ImplOpenGL3_Init("#version 330");
 
     defaultFont = ImGui::GetIO().Fonts->AddFontFromFileTTF("./res/jetbrains.ttf", 15);
-    
-    TESLA_PHYSICS::RaycastResult result;
-    
-    if (TESLA_PHYSICS::Raycaster::Raycast(glm::vec3(0, 10, 0), glm::vec3(0, -1, 0),
-        100, 1000, sceneObjects, result))
-    {
-        TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
-    }
 }
 
 void Render()
@@ -95,6 +87,23 @@ void Render()
     {
         if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(window))
             TESLA::ExitApplication();
+
+        if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+        {
+            glm::vec3 cameraPosition = Camera::cameraPosition;
+            glm::vec3 cameraDirection = Camera::cameraDirection;
+
+            TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Raycasted from ({0},{1},{2}) to ({3},{4},{5})", cameraPosition.x, cameraPosition.y, cameraPosition.z, cameraDirection.x, cameraDirection.y, cameraDirection.z);
+
+            TESLA_PHYSICS::RaycastResult result;
+
+    
+            if (TESLA_PHYSICS::Raycaster::Raycast(cameraPosition, cameraDirection,
+            1000, 1000, sceneObjects, result))
+            {
+                TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
+            }
+        }
         
         glm::mat4 newView = Camera::CalculateView(window);
         if(newView != glm::mat4(1))

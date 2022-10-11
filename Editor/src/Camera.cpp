@@ -4,8 +4,6 @@
 #include <imgui/imgui_impl_glfw.h>
 
 glm::vec3 globalUpVector = glm::vec3(0, 1, 0);
-glm::vec3 cameraPosition = glm::vec3(1.5f, 1.0f, 1.5f);
-glm::vec3 cameraTarget = glm::vec3(0);
 
 float yaw, pitch;
 bool focused;
@@ -60,7 +58,6 @@ glm::mat4 Camera::CalculateView(GLFWwindow* window)
     
     glfwSetMouseButtonCallback(window, MouseCallback);
     
-    glm::vec3 cameraDirection;
     cameraDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraDirection.y = sin(glm::radians(pitch));
     cameraDirection.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
