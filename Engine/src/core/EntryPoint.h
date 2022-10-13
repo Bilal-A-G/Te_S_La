@@ -26,6 +26,9 @@ int main(int argc, char* argv[])
     
     while (runApplication)
     {
+        if(TESLA::Application::WindowShouldClose())
+            TESLA::ExitApplication();
+        
         TESLA::Application::SwapBuffers();
         TESLA::GLADWrapper::OpenGLRender();
         TESLA::Application::CreateImGUINewFrame();

@@ -67,7 +67,7 @@ void Render()
         return;
     }
     
-    if(TESLA::Application::GetKey(GLFW_KEY_ESCAPE) == GLFW_PRESS || TESLA::Application::WindowShouldClose())
+    if(TESLA::Application::GetKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
         TESLA::ExitApplication();
 
     if(TESLA::Application::GetKey(GLFW_KEY_F) == GLFW_PRESS)
