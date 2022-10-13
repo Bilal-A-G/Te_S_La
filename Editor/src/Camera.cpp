@@ -1,7 +1,7 @@
 ﻿#include "Camera.h"
 
 #include <glm/ext/matrix_transform.hpp>
-#include <imgui/imgui_impl_glfw.h>
+#include "utils/Application.h"
 
 glm::vec3 globalUpVector = glm::vec3(0, 1, 0);
 
@@ -17,7 +17,7 @@ float timeLastFrame;
 glm::vec2 mousePosLastFrame;
 glm::vec2 mouseDelta;
 
-void CursorCallback(GLFWwindow* window, double mousex, double mousey)
+void CursorCallback(GLFWwindow* _, double mousex, double mousey)
 {
     if(focused)
     {
@@ -34,29 +34,29 @@ void CursorCallback(GLFWwindow* window, double mousex, double mousey)
     mousePosLastFrame = glm::vec2(mousex, mousey);
 }
 
-void MouseCallback(GLFWwindow* window, int button, int action, int mods)
+void MouseCallback(GLFWwindow* _, int button, int action, int mods)
 {
     if(button == GLFW_MOUSE_BUTTON_RIGHT)
     {
         if(action == GLFW_PRESS)
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPosCallback(window, CursorCallback);
+            TESLA::Application::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            TESLA::Application::SetMouseCursorCallback(CursorCallback);
         }
         else if(action == GLFW_RELEASE)
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            glfwSetCursorPosCallback(window, ImGui_ImplGlfw_CursorPosCallback);
+            TESLA::Application::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            TESLA::Application::ReturnCursor();
             focused = true;
         }
     }
 }
 
-glm::mat4 Camera::CalculateView(GLFWwindow* window)
+glm::mat4 Camera::CalculateView()
 {
-    deltaTime = glfwGetTime() - timeLastFrame;
+    deltaTime = TESLA::Application::GetTime() - timeLastFrame;
     
-    glfwSetMouseButtonCallback(window, MouseCallback);
+    TESLA::Application::SetMouseButtonCallback(MouseCallback);
     
     cameraDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraDirection.y = sin(glm::radians(pitch));
@@ -69,28 +69,28 @@ glm::mat4 Camera::CalculateView(GLFWwindow* window)
 
     const float cameraSpeed = moveSpeed * deltaTime;
 
-    if(ImGui::GetIO().WantCaptureKeyboard)
+    if(TESLA::Application::ImGUIWantsKeyboard())
     {
         focused = true;
         return glm::mat4(1);
     }
     
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if(TESLA::Application::GetKey(GLFW_KEY_W) == GLFW_PRESS)
         cameraPosition += cameraDirection * cameraSpeed;
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if(TESLA::Application::GetKey(GLFW_KEY_S) == GLFW_PRESS)
         cameraPosition -= cameraDirection * cameraSpeed;
     
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if(TESLA::Application::GetKey(GLFW_KEY_A) == GLFW_PRESS)
         cameraPosition += cameraRight * cameraSpeed;
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if(TESLA::Application::GetKey(GLFW_KEY_D) == GLFW_PRESS)
         cameraPosition -= cameraRight * cameraSpeed;
     
-    if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    if(TESLA::Application::GetKey(GLFW_KEY_SPACE) == GLFW_PRESS)
         cameraPosition += cameraUp * cameraSpeed;
-    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+    if(TESLA::Application::GetKey(GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         cameraPosition -= cameraUp * cameraSpeed;
 
-    timeLastFrame = glfwGetTime();
+    timeLastFrame = TESLA::Application::GetTime();
     
     return glm::lookAt(cameraPosition, cameraPosition + cameraDirection, globalUpVector);
 }

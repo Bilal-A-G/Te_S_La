@@ -37,7 +37,8 @@ project "Engine"
         "glfw3_mt",
         "glfw3",
         "OpenGL32",
-        "assimp-vc142-mt"
+        "assimp-vc142-mt",
+        "imgui"
     }
 
     filter "system:windows"

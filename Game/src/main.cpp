@@ -11,21 +11,21 @@ float nearPlane = 0.1f;
 float farPlane = 200.0f;
 
 float angle = 0.0f;
-TESLA::Model* gun;
-TESLA::Model* suzanne;
+TESLA::Model* suzanne2;
+TESLA::Model* suzanne1;
+
+glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(window_width)/static_cast<float>(window_height), nearPlane, farPlane);
+glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBAL_UP_VECTOR);
 
 void LogGLFWErrors(int id, const char* error_message) {TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "GLFW error: {0}, ID = {1}", error_message, id);}
 void ResizeWindow(GLFWwindow* _, int width, int height) {TESLA::GLADWrapper::UpdateViewport(width, height);}
 
-TESLA::Model* CreateMesh(const char* fileName)
+TESLA::Model* CreateMesh(const char* fileName, const char* modelName)
 {
-    const glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(window_width)/static_cast<float>(window_height), nearPlane, farPlane);
-    const glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBAL_UP_VECTOR);
-    
     TESLA::Shader basicShader;
     const GLuint shaderProgram = basicShader.GetProgram();
 
-    return new TESLA::Model(fileName, shaderProgram, view, projection);
+    return new TESLA::Model(fileName, modelName, shaderProgram, view, projection);
 }
 
 void Init()
@@ -55,13 +55,13 @@ void Init()
     TESLA::GLADWrapper::UpdateViewport(window_width, window_height);
     glfwSetFramebufferSizeCallback(window, ResizeWindow);
 
-    suzanne = CreateMesh("Suzanne.obj");
-    suzanne->Scale(glm::vec3(0.5, 0.5, 0.5));
-    suzanne->Translate(glm::vec3(-1, 0, 0));
+    suzanne1 = CreateMesh("Suzanne.obj", "Monkey1");
+    suzanne1->Scale(glm::vec3(0.5, 0.5, 0.5));
+    suzanne1->Translate(glm::vec3(-1, 0, 0));
 
-    gun = CreateMesh("BG60.obj");
-    gun->Scale(glm::vec3(0.3,0.3,0.3));
-    gun->Translate(glm::vec3(1, 0, 0));
+    suzanne2 = CreateMesh("Suzanne.obj", "Monkey2");
+    suzanne2->Scale(glm::vec3(0.3,0.3,0.3));
+    suzanne2->Translate(glm::vec3(1, 0, 0));
 }
 
 void Render()
@@ -78,21 +78,22 @@ void Render()
     angle += 1;
     if(angle > 360) angle = 0.0f;
     
-    //gun->Draw();
-    //gun->Rotate(angle, GLOBAL_UP_VECTOR);
+    suzanne2->Draw();
+    suzanne2->Rotate(angle, GLOBAL_UP_VECTOR);
 
-    suzanne->Draw();
+    suzanne1->Draw();
+    suzanne1->Rotate(angle, GLOBAL_UP_VECTOR);
 
     glfwPollEvents();
 }
 
 void CleanUp()
 {
-    delete gun;
-    gun = nullptr;
+    delete suzanne1;
+    suzanne1 = nullptr;
 
-    delete suzanne;
-    suzanne = nullptr;
+    delete suzanne2;
+    suzanne2 = nullptr;
     
     glfwTerminate();
 }
