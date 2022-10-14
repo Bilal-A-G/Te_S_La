@@ -1,6 +1,7 @@
 ﻿#include "Te_S_La.h"
 #include "Camera.h"
-#include "utils/Physics.h"
+#include "utils/events/Event.h"
+#include "utils/physics/Physics.h"
 
 int windowHeight = 800;
 int windowWidth = 1200;

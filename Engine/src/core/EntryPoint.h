@@ -1,7 +1,7 @@
 #pragma once
-#include "../utils/Logger.h"
+#include "../utils/logging/Logger.h"
 #include "Application.h"
-#include "utils/GLADWrapper.h"
+#include "utils/rendering/GLADWrapper.h"
 
 inline bool runApplication = true;
 

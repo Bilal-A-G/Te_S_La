@@ -6,7 +6,6 @@ namespace TESLA
     class TS_DLL MouseEvent : public Event
     {
     public:
-        MouseEvent() = delete;
         EventCategory GetCategory() override
         {
             return TESLA::EventCategory::Mouse;
@@ -37,18 +36,22 @@ namespace TESLA
     class TS_DLL MouseScrolledEvent : public MouseEvent
     {
     public:
-        MouseScrolledEvent(float scrollDelta)
-            :MouseEvent(), m_scrollDelta(scrollDelta){}
+        MouseScrolledEvent(float xOffset, float yOffset)
+            :MouseEvent(), m_xOffset(xOffset), m_yOffset(yOffset){}
         EventType GetType() override
         {
             return TESLA::EventType::MouseScrolled;
         }
-        float GetScrollDelta()
+        float GetXOffset()
         {
-            return m_scrollDelta;
+            return m_xOffset;
+        }
+        float GetYOffset()
+        {
+            return m_yOffset;
         }
     
     private:
-        float m_scrollDelta;
+        float m_xOffset, m_yOffset;
     };
 }
