@@ -1,7 +1,7 @@
 ﻿#include "Camera.h"
 
 #include <glm/ext/matrix_transform.hpp>
-#include "utils/Application.h"
+#include "core//Application.h"
 
 glm::vec3 globalUpVector = glm::vec3(0, 1, 0);
 

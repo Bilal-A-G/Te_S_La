@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "Model.h"
+#include "../Models/Model.h"
 #include "glm/glm.hpp"
-#include"../core/Core.h"
+#include"../../core/Core.h"
 
 namespace TESLA_PHYSICS
 {

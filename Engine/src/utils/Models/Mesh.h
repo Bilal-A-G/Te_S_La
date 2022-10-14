@@ -3,7 +3,7 @@
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include "glad/glad.h"
-#include "../core/core.h"
+#include "../../core/core.h"
 
 //This class handles per mesh data/operations
 

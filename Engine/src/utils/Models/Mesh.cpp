@@ -1,5 +1,5 @@
 ﻿#include "Mesh.h"
-#include "Logger.h"
+#include "../Logging/Logger.h"
 
 namespace TESLA
 {

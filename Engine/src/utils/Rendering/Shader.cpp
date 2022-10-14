@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "Logger.h"
+#include "../Logging/Logger.h"
 
 namespace TESLA
 {

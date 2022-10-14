@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "glad/glad.h"
-#include "../core/Core.h"
+#include "../../core/Core.h"
 
 //This class handles everything to do with shaders
 

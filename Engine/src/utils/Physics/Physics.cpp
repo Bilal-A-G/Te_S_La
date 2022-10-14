@@ -1,6 +1,6 @@
 ﻿#include "Physics.h"
 
-#include "Logger.h"
+#include "../Logging/Logger.h"
 
 float radius = 1;
 

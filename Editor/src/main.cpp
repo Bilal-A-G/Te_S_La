@@ -9,6 +9,7 @@ float nearPlane = 0.1f;
 float farPlane = 200.0f;
 
 char sceneTextBuffer[20] = "";
+TESLA::Model* activeModel;
 
 glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(windowWidth)/static_cast<float>(windowHeight), nearPlane, farPlane);
 glm::mat4 view = glm::mat4(0);
@@ -19,6 +20,13 @@ TESLA::Model* ImportModel(const char* fileName, const char* modelName)
     GLuint shaderProgram = basicShader.GetProgram();
 
     return new TESLA::Model{fileName, modelName, shaderProgram, view, projection};
+}
+
+int SetActiveObjectName(ImGuiInputTextCallbackData* data)
+{
+    TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Set object name: {1}, {0}", data->Buf, activeModel->name);
+    activeModel->name = data->Buf;
+    return 1;
 }
 
 std::vector<TESLA::Model*> sceneObjects;
@@ -74,14 +82,17 @@ void Render()
     {
         glm::vec3 cameraPosition = Camera::cameraPosition;
         glm::vec3 cameraDirection = Camera::cameraDirection;
-
-        TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Raycasted from ({0},{1},{2}) to ({3},{4},{5})", cameraPosition.x, cameraPosition.y, cameraPosition.z, cameraDirection.x, cameraDirection.y, cameraDirection.z);
-
+        
         TESLA_PHYSICS::RaycastResult result;
         if (TESLA_PHYSICS::Raycaster::Raycast(cameraPosition, cameraDirection,
                                               1000, 1000, sceneObjects, result))
         {
             TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
+            activeModel = result.hitObject;
+        }
+        else
+        {
+            activeModel = nullptr;
         }
     }
         
