@@ -1,10 +1,6 @@
-﻿// ReSharper disable CppMemberFunctionMayBeStatic
-// ReSharper disable CppMemberFunctionMayBeConst
+﻿#include "TSpch.h"
 #include "Shader.h"
-#include <fstream>
-#include <sstream>
-#include <string>
-#include "../Logging/Logger.h"
+#include "../../TSpch.h"
 
 namespace TESLA
 {

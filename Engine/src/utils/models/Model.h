@@ -8,12 +8,18 @@ namespace TESLA
     {
     public:
         std::string name;
+        Model(const Model& model)
+            :m_viewMatrix(model.m_viewMatrix), m_projectionMatrix(model.m_projectionMatrix)
+        {
+            m_shaderProgram = model.m_shaderProgram;
+            m_meshes = model.m_meshes;
+            name = model.name;
+        }
+        
         Model(const char* fileName, const char* modelname, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_shaderProgram = shaderProgram;
-            m_projectionMatrix = projectionMatrix;
-            m_viewMatrix = viewMatrix;
             name = modelname;
 
             LoadModel(fileName);

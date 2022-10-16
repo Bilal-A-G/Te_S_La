@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include <vector>
-
+#include "../../TSpch.h"
 #include "../../core/Core.h"
 
 namespace TESLA

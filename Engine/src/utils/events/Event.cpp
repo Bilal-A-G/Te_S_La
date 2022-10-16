@@ -1,4 +1,5 @@
-﻿#include "Event.h"
+﻿#include "TSpch.h"
+#include "Event.h"
 
 std::vector<void(*)(TESLA::Event*)> TESLA::EventListener::subscribers;
 std::vector<TESLA::EventCategory> TESLA::EventListener::listenerTypes;

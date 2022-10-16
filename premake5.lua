@@ -23,6 +23,8 @@ project "Engine"
         "external"
     }
 
+    pchheader "TSpch.h"
+    pchsource "Engine/src/TSpch.cpp"
 
     files
     {
@@ -66,6 +68,9 @@ project "Engine"
     filter "configurations:Release"
         defines "TS_RELEASE"
         optimize "On"
+
+    filter "files:**.c"
+        flags {"NoPCH"}
 
 project "Game"
     location "Game"

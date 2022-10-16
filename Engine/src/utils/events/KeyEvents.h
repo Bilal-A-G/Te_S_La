@@ -9,7 +9,11 @@ namespace TESLA
     public:
         KeyEvent(const int& keycode, const bool& pressed) 
             : m_keycode(keycode), m_pressed(pressed){}
-        int GetKeycode();
+        int GetKeycode()
+        {
+            return m_keycode;
+        }
+
         EventType GetType() override
         {
             return m_pressed ? TESLA::EventType::ButtonPressed : TESLA::EventType::ButtonReleased;

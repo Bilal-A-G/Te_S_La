@@ -1,5 +1,5 @@
 #pragma once
-#include "../utils/logging/Logger.h"
+#include "TSpch.h"
 #include "Application.h"
 #include "utils/rendering/GLADWrapper.h"
 

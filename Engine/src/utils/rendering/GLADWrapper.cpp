@@ -1,4 +1,5 @@
-﻿#include "GLADWrapper.h"
+﻿#include "TSpch.h"
+#include "GLADWrapper.h"
 #include "glad/glad.h"
 
 void TESLA::GLADWrapper::OpenGLRender()

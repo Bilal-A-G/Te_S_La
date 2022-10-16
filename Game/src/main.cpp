@@ -8,9 +8,15 @@ int windowWidth = 1200;
 float nearPlane = 0.1f;
 float farPlane = 200.0f;
 
+bool rotate = true;
+bool perspective = true;
+
+bool oToggle;
+bool spaceToggle;
+
 float angle = 0.0f;
 TESLA::Model* suzanne2;
-TESLA::Model* suzanne1;
+TESLA::Model* suzanne;
 
 glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(windowWidth)/static_cast<float>(windowHeight), nearPlane, farPlane);
 glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBAL_UP_VECTOR);
@@ -29,29 +35,65 @@ void Init()
 {
     TESLA::Application::Start(windowWidth, windowHeight, "Game");
     
-    suzanne1 = CreateMesh("Suzanne.obj", "Monkey1");
-    suzanne1->Scale(glm::vec3(0.5, 0.5, 0.5));
-    suzanne1->Translate(glm::vec3(-1, 0, 0));
-
-    suzanne2 = CreateMesh("Suzanne.obj", "Monkey2");
+    suzanne = CreateMesh("Suzanne.obj", "Monkey1");
+    suzanne->Scale(glm::vec3(0.5, 0.5, 0.5));
+    suzanne->Translate(glm::vec3(-1, 0, 0));
+    
+    suzanne2 = new TESLA::Model(*suzanne);
     suzanne2->Scale(glm::vec3(0.3,0.3,0.3));
     suzanne2->Translate(glm::vec3(1, 0, 0));
 }
 
 void Render()
 {
-    angle += 1;
-    if(angle > 360) angle = 0.0f;
+    if(TESLA::Application::GetKey(GLFW_KEY_O) == GLFW_PRESS)
+    {
+        if(!oToggle)
+            rotate = !rotate;
+        oToggle = true;
+    }
+    else
+    {
+        oToggle = false;
+    }
+
+    if(TESLA::Application::GetKey(GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+        if(!spaceToggle)
+        {
+            perspective = !perspective;
+        }
+        spaceToggle = true;
+    }
+    else
+    {
+        spaceToggle = false;
+    }
+    
+    if(rotate)
+    {
+        angle += 1;
+        if(angle > 360) angle = 0.0f;
+    }
+
+    if(perspective)
+    {
+        projection = glm::perspective(glm::radians(70.0f), static_cast<float>(windowWidth)/static_cast<float>(windowHeight), nearPlane, farPlane);
+    }
+    else
+    {
+        projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, nearPlane, farPlane);
+    }
     
     suzanne2->Draw();
     suzanne2->Rotate(angle, GLOBAL_UP_VECTOR);
 
-    suzanne1->Draw();
-    suzanne1->Rotate(angle, GLOBAL_UP_VECTOR);
+    suzanne->Draw();
+    suzanne->Rotate(angle, GLOBAL_UP_VECTOR);
 }
 
 void CleanUp()
 {
-    delete suzanne1;
+    delete suzanne;
     delete suzanne2;
 }

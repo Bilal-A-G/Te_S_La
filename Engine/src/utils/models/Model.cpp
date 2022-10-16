@@ -1,9 +1,8 @@
-﻿#include "Model.h"
+﻿#include "TSpch.h"
+#include "Model.h"
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
-#include "../Logging/Logger.h"
-#include <string>
 
 //This class is basically a group of meshes that exists to more easily interact with assimp
 

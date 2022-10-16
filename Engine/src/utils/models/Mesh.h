@@ -1,9 +1,8 @@
 ﻿#pragma once
-#include <array>
-#include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include "glad/glad.h"
 #include "../../core/core.h"
+#include "../../TSpch.h"
 
 //This class handles per mesh data/operations
 
@@ -30,9 +29,13 @@ namespace TESLA
             m_vertices = vertices;
             m_indices = indices;
             m_shaderProgram = shaderProgram;
-            m_projectionMatrix = projectionMatrix;
-            m_viewMatrix = viewMatrix;
             this->SetupGLObjects();
+        }
+
+        Mesh& operator=(const Mesh& mesh)
+        {
+            m_vao = mesh.m_vao;
+            return *this;
         }
     
         void Draw();
