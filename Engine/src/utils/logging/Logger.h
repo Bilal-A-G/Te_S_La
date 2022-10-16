@@ -31,9 +31,12 @@ namespace TESLA_LOGGER
 #ifdef TS_DEBUG
 #ifdef TS_ENGINE
 #define TS_LOG_MESSAGE(...) ::TESLA::Logger::GetEngineLogger()->log(__VA_ARGS__)
+#define TS_LOG_ASSERTION(x, ...){if(!x) {TESLA::Logger::GetEngineLogger()->log(__VA_ARGS__); __debugbreak(); } }
 #else
 #define TS_LOG_MESSAGE(...) ::TESLA::Logger::GetClientLogger()->log(__VA_ARGS__)
+#define TS_LOG_ASSERTION(x, ...){if(!x) {TESLA::Logger::GetClientLogger()->log(__VA_ARGS__); __debugbreak(); } }
 #endif
 #else
-#define TS_LOG_MESSAGE(...) 
+#define TS_LOG_MESSAGE(...)
+#define TS_LOG_ASSERTION(x, ...)
 #endif

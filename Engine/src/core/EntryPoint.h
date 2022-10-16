@@ -29,13 +29,12 @@ int main(int argc, char* argv[])
         if(TESLA::Application::WindowShouldClose())
             TESLA::ExitApplication();
         
-        TESLA::Application::SwapBuffers();
+        TESLA::Application::Update();
         TESLA::GLADWrapper::OpenGLRender();
         TESLA::Application::CreateImGUINewFrame();
         Render();
         DrawGUIs();
         TESLA::Application::ImGUIRender();
-        TESLA::Application::PollEvents();
     }
 
     CleanUp();

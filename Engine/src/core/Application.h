@@ -11,9 +11,8 @@ namespace TESLA
     public:
         //GLFW stuff
         static void Start(const int& windowWidth,const int& windowHeight, const char* name);
+        static void Update();
         static void Terminate();
-        static void PollEvents();
-        static void SwapBuffers();
         static void SetMouseButtonCallback(GLFWmousebuttonfun callback);
         static void SetMouseCursorCallback(GLFWcursorposfun callback);
         static void SetInputMode(int mode, int value);
