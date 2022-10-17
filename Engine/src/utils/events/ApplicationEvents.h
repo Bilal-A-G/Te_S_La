@@ -6,7 +6,6 @@ namespace TESLA
     class TS_DLL WindowEvent : public Event
     {
     public:
-        WindowEvent() = delete;
         EventCategory GetCategory() override
         {
             return TESLA::EventCategory::Application;
@@ -16,7 +15,6 @@ namespace TESLA
     class TS_DLL WindowClosedEvent : public WindowEvent
     {
     public:
-        WindowClosedEvent();
         EventType GetType() override
         {
             return TESLA::EventType::WindowClosed;
@@ -26,7 +24,6 @@ namespace TESLA
     class TS_DLL WindowFocusedEvent : public WindowEvent
     {
     public:
-        WindowFocusedEvent();
         EventType GetType() override
         {
             return TESLA::EventType::WindowFocused;
@@ -36,7 +33,6 @@ namespace TESLA
     class TS_DLL WindowLostFocusEvent : public WindowEvent
     {
     public:
-        WindowLostFocusEvent();
         EventType GetType() override
         {
             return TESLA::EventType::WindowLostFocus;
@@ -46,7 +42,6 @@ namespace TESLA
     class TS_DLL WindowMovedEvent : public WindowEvent
     {
     public:
-        WindowMovedEvent();
         EventType GetType() override
         {
             return TESLA::EventType::WindowMoved;
@@ -57,7 +52,7 @@ namespace TESLA
     {
     public:
         WindowResizedEvent(const unsigned int& windowHeight,const unsigned int& windowWidth)
-            : WindowEvent(), m_windowHeight(windowHeight), m_windowWidth(windowWidth){}
+            :m_windowHeight(windowHeight), m_windowWidth(windowWidth){}
         unsigned int GetWindowHeight()
         {
             return m_windowHeight;

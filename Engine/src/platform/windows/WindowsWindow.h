@@ -10,7 +10,6 @@ namespace TESLA
         std::string name;
         int width, height;
         bool vSync;
-        TESLA::Window::EventCallbackFn callback;
         GLFWwindow* window;
         
         WindowsWindowProperties(const int& width, const int& height, const char* name, const bool vSync, GLFWwindow* window)
@@ -32,16 +31,11 @@ namespace TESLA
 
         void InitImGUI() override;
         bool WindowShouldClose() override;
-        void SetMouseButtonCallback(GLFWmousebuttonfun callback) override;
-        void SetMouseCursorCallback(GLFWcursorposfun callback) override;
-        int GetKey(const int& key) override;
         void SetInputMode(int mode, int value) override;
 
         std::string GetName() override {return m_data->name; }
         bool GetVSync() override {return m_data->vSync; }
         void SetVSync(const bool& set) override;
-
-        void SetEventCallback(const EventCallbackFn& callback) override;
     private:
         WindowsWindowProperties* m_data;
     };

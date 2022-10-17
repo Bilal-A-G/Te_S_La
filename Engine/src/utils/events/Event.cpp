@@ -1,24 +1,35 @@
 ﻿#include "TSpch.h"
 #include "Event.h"
 
-std::vector<void(*)(TESLA::Event*)> TESLA::EventListener::subscribers;
-std::vector<TESLA::EventCategory> TESLA::EventListener::listenerTypes;
+std::vector<TESLA::Subscriber> TESLA::EventListener::m_subscribers;
 
 void TESLA::EventListener::Invoke(Event* event)
 {
-    for(int i = 0; i < listenerTypes.size(); i++)
+    for(int i = 0; i < m_subscribers.size(); i++)
     {
-        if(listenerTypes[i] == event->GetCategory() && !event->GetHandled())
+        Subscriber currentSubscriber = m_subscribers[i];
+        
+        if(currentSubscriber.type == event->GetType() && currentSubscriber.category == event->GetCategory())
         {
-            subscribers[i](event);
-            event->Handle();
+            currentSubscriber.EventFunc(event);
         }
     }
 }
 
-void TESLA::EventListener::Subscribe(void (* EventFunc)(TESLA::Event*), const TESLA::EventCategory& type)
+void TESLA::EventListener::UnSubscribe(void (* EventFunc)(TESLA::Event*))
 {
-    subscribers.push_back(EventFunc);
-    listenerTypes.push_back(type);
+    for (int i = 0; i < m_subscribers.size(); ++i)
+    {
+        if(m_subscribers[i].EventFunc == EventFunc)
+        {
+            m_subscribers.erase(m_subscribers.begin() + i);
+        }
+    }
+}
+
+
+void TESLA::EventListener::Subscribe(const Subscriber& subscriber)
+{
+    m_subscribers.push_back(subscriber);
 }
 

@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Event.h"
-#include "MouseEvents.h"
 
 namespace TESLA
 {
@@ -26,7 +25,8 @@ namespace TESLA
     class TS_DLL KeyboardButtonEvent : public KeyEvent
     {
     public:
-        using KeyEvent::KeyEvent;
+        KeyboardButtonEvent(const int& keycode, const bool& pressed)
+            :KeyEvent(keycode, pressed){}
         
         EventCategory GetCategory() override
         {
@@ -34,9 +34,15 @@ namespace TESLA
         }
     };
 
-    class TS_DLL MouseButtonEvent : public KeyEvent, public MouseEvent
+    class TS_DLL MouseButtonEvent : public KeyEvent
     {
     public:
-        using KeyEvent::KeyEvent;
+        MouseButtonEvent(const int& keycode, const bool& pressed)
+            :KeyEvent(keycode, pressed){}
+
+        EventCategory GetCategory() override
+        {
+            return TESLA::EventCategory::Mouse;
+        }
     };
 }

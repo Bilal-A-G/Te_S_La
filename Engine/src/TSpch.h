@@ -14,6 +14,7 @@
 #include "algorithm"
 
 #include "utils/logging/Logger.h"
+#include "utils/events/Event.h"
 
 #ifdef TS_WIN
 #include "Windows.h"

@@ -5,6 +5,9 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+#include "../../utils/events/ApplicationEvents.h"
+#include "../../utils/events/KeyEvents.h"
+#include "../../utils/events/MouseEvents.h"
 #include "../../utils/rendering/GLADWrapper.h"
 
 void LogGLFWErrors(int id, const char* error_message) {TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "GLFW error: {0}, ID = {1}", error_message, id);}
@@ -52,22 +55,18 @@ TESLA::WindowsWindow::WindowsWindow(const WindowProperties& properties)
     glfwSetFramebufferSizeCallback(m_data->window, ResizeWindow);
 
     WindowsWindow::SetVSync(true);
+    
+    glfwSetWindowCloseCallback(window, [](GLFWwindow* _window){EventListener::Invoke(new WindowClosedEvent());    });
+    glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods){EventListener::Invoke(new MouseButtonEvent(button, action == GLFW_PRESS)); });
+    glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos){EventListener::Invoke(new MouseMovedEvent(xpos,ypos)); });
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods){EventListener::Invoke(new KeyboardButtonEvent(key, action == GLFW_PRESS)); });
+    glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset){EventListener::Invoke(new MouseScrolledEvent(xoffset, yoffset));});
 }
 
 void TESLA::WindowsWindow::SetVSync(const bool& set)
 {
     glfwSwapInterval(set ? 1 : 0);
     m_data->vSync = set;
-}
-
-void TESLA::WindowsWindow::SetEventCallback(const EventCallbackFn& callback)
-{
-    
-}
-
-int TESLA::WindowsWindow::GetKey(const int& key)
-{
-    return glfwGetKey(m_data->window, key);
 }
 
 void TESLA::WindowsWindow::SetInputMode(int mode, int value)
@@ -87,16 +86,6 @@ void TESLA::WindowsWindow::InitImGUI()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(m_data->window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-}
-
-void TESLA::WindowsWindow::SetMouseButtonCallback(GLFWmousebuttonfun callback)
-{
-    glfwSetMouseButtonCallback(m_data->window, callback);
-}
-
-void TESLA::WindowsWindow::SetMouseCursorCallback(GLFWcursorposfun callback)
-{
-    glfwSetCursorPosCallback(m_data->window, callback);
 }
 
 

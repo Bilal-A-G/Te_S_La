@@ -53,12 +53,12 @@ bool TESLA::Application::ImGUIWantsKeyboard()
 
 void TESLA::Application::ReturnMouse()
 {
-    SetMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
+    //SetMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
 }
 
 void TESLA::Application::ReturnCursor()
 {
-    SetMouseCursorCallback(ImGui_ImplGlfw_CursorPosCallback);
+    //SetMouseCursorCallback(ImGui_ImplGlfw_CursorPosCallback);
 }
 
 
@@ -93,34 +93,14 @@ void TESLA::Application::EndGUI()
     ImGui::End();
 }
 
-int TESLA::Application::GetKey(int key)
-{
-    return window->GetKey(key);
-}
-
 void TESLA::Application::SetInputMode(int mode, int value)
 {
     window->SetInputMode(mode, value);
 }
 
-bool TESLA::Application::WindowShouldClose()
-{
-    return window->WindowShouldClose();
-}
-
 void TESLA::Application::InitImGUI()
 {
     window->InitImGUI();
-}
-
-void TESLA::Application::SetMouseButtonCallback(GLFWmousebuttonfun callback)
-{
-    window->SetMouseButtonCallback(callback);
-}
-
-void TESLA::Application::SetMouseCursorCallback(GLFWcursorposfun callback)
-{
-    window->SetMouseCursorCallback(callback);
 }
 
 

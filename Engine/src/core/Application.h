@@ -13,11 +13,7 @@ namespace TESLA
         static void Start(const int& windowWidth,const int& windowHeight, const char* name);
         static void Update();
         static void Terminate();
-        static void SetMouseButtonCallback(GLFWmousebuttonfun callback);
-        static void SetMouseCursorCallback(GLFWcursorposfun callback);
         static void SetInputMode(int mode, int value);
-        static int GetKey(int key);
-        static bool WindowShouldClose();
         static double GetTime();
 
         //ImGUI stuff

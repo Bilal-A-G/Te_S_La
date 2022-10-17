@@ -27,13 +27,7 @@ namespace TESLA
 
         virtual void InitImGUI() = 0;
         virtual bool WindowShouldClose() = 0;
-        virtual void SetMouseButtonCallback(GLFWmousebuttonfun callback) = 0;
-        virtual void SetMouseCursorCallback(GLFWcursorposfun callback) = 0;
-        virtual int GetKey(const int& key) = 0;
         virtual void SetInputMode(int mode, int value) = 0;
-    
-        using EventCallbackFn = std::function<void(TESLA::Event*)>;
-        virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
     
         static Window* Create(const WindowProperties& properties);
         static Window* Create(const char* name){return Create({1200, 800, name});}

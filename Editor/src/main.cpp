@@ -1,6 +1,6 @@
 ﻿#include "Te_S_La.h"
 #include "Camera.h"
-#include "utils/events/Event.h"
+#include "utils/events/KeyEvents.h"
 #include "utils/physics/Physics.h"
 
 int windowHeight = 800;
@@ -21,13 +21,6 @@ TESLA::Model* ImportModel(const char* fileName, const char* modelName)
     GLuint shaderProgram = basicShader.GetProgram();
 
     return new TESLA::Model{fileName, modelName, shaderProgram, view, projection};
-}
-
-int SetActiveObjectName(ImGuiInputTextCallbackData* data)
-{
-    TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Set object name: {1}, {0}", data->Buf, activeModel->name);
-    activeModel->name = data->Buf;
-    return 1;
 }
 
 std::vector<TESLA::Model*> sceneObjects;
@@ -63,6 +56,34 @@ void Init()
 
     sceneObjects.push_back(ImportModel("cube.obj", "Cube 2"));
     sceneObjects[1] ->Translate(glm::vec3(2, 2, 2));
+
+    TESLA::EventListener::Subscribe({[](TESLA::Event* event)
+    {
+        auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event);
+        if(castedEvent->GetKeycode() == GLFW_KEY_ESCAPE)
+        {
+            TESLA::ExitApplication();
+        }
+        else if(castedEvent->GetKeycode() == GLFW_KEY_F)
+        {
+            glm::vec3 cameraPosition = Camera::cameraPosition;
+            glm::vec3 cameraDirection = Camera::cameraDirection;
+        
+            TESLA_PHYSICS::RaycastResult result;
+            if (TESLA_PHYSICS::Raycaster::Raycast(cameraPosition, cameraDirection, 1000, 1000, sceneObjects, result))
+            {
+                TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
+                activeModel = result.hitObject;
+            }
+            else
+            {   
+                activeModel = nullptr;
+            }
+        }
+    },TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard
+    });
+
+    Camera::Init();
 }
 
 void Render()
@@ -74,27 +95,6 @@ void Render()
     {
         TESLA::Application::ReturnMouse();
         return;
-    }
-    
-    if(TESLA::Application::GetKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        TESLA::ExitApplication();
-
-    if(TESLA::Application::GetKey(GLFW_KEY_F) == GLFW_PRESS)
-    {
-        glm::vec3 cameraPosition = Camera::cameraPosition;
-        glm::vec3 cameraDirection = Camera::cameraDirection;
-        
-        TESLA_PHYSICS::RaycastResult result;
-        if (TESLA_PHYSICS::Raycaster::Raycast(cameraPosition, cameraDirection,
-                                              1000, 1000, sceneObjects, result))
-        {
-            TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
-            activeModel = result.hitObject;
-        }
-        else
-        {
-            activeModel = nullptr;
-        }
     }
         
     glm::mat4 newView = Camera::CalculateView();

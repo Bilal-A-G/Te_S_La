@@ -30,17 +30,16 @@ namespace TESLA
     public:
         virtual EventCategory GetCategory() = 0;
         virtual EventType GetType() = 0;
-        bool GetHandled()
-        {
-            return handled;
-        }
-        void Handle()
-        {
-            handled = true;
-            //Temporary, will probs not be deleting the event after handling in the future
-            delete this;
-        }
-        bool handled = false;
+    };
+
+    struct Subscriber
+    {
+        Subscriber(void(*EventFunc)(TESLA::Event*), const TESLA::EventType type, const TESLA::EventCategory category)
+            :EventFunc(EventFunc), type(type), category(category){}
+        
+        void(*EventFunc)(TESLA::Event*);
+        TESLA::EventType type;
+        TESLA::EventCategory category;
     };
     
     class TS_DLL EventListener
@@ -48,9 +47,9 @@ namespace TESLA
     public:
         EventListener() = delete;
         static void Invoke(Event* event);
-        static void Subscribe(void (*EventFunc)(TESLA::Event*), const TESLA::EventCategory& type);
+        static void Subscribe(const Subscriber& subscriber);
+        static void UnSubscribe(void(*EventFunc)(TESLA::Event*));
     private:
-        static std::vector<void(*)(TESLA::Event*)> subscribers;
-        static std::vector<TESLA::EventCategory> listenerTypes;
+        static std::vector<Subscriber> m_subscribers;
     };
 }

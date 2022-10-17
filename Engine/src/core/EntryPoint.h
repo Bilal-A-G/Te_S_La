@@ -23,12 +23,10 @@ int main(int argc, char* argv[])
     TESLA::Logger::Init();
     Init();
     TESLA::Application::InitImGUI();
+    TESLA::EventListener::Subscribe({[](TESLA::Event* event){TESLA::ExitApplication();}, TESLA::EventType::WindowClosed, TESLA::EventCategory::Application});
     
     while (runApplication)
     {
-        if(TESLA::Application::WindowShouldClose())
-            TESLA::ExitApplication();
-        
         TESLA::Application::Update();
         TESLA::GLADWrapper::OpenGLRender();
         TESLA::Application::CreateImGUINewFrame();
