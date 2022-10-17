@@ -2,6 +2,7 @@
 #include <imgui/imgui.h>
 
 #include "../core/Core.h"
+#include "../utils/events/LayerStack.h"
 #include "GLFW/glfw3.h"
 
 namespace TESLA
@@ -31,5 +32,11 @@ namespace TESLA
         static void EndGUI();
         static bool CreateButton(const char* name);
         static bool CreateInputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = 0, void* user_data = 0);
+
+        static void PushLayer(Layer* layer);
+        static void PushOverlay(Layer* overlay);
+        static void DispatchEvent(TESLA::EventFunction function, TESLA::Event* event);
+    private:
+        static LayerStack m_layerStack;
     };
 }

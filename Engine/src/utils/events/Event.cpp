@@ -1,5 +1,6 @@
 ﻿#include "TSpch.h"
 #include "Event.h"
+#include "../../core/Application.h"
 
 std::vector<TESLA::Subscriber> TESLA::EventListener::m_subscribers;
 
@@ -11,16 +12,16 @@ void TESLA::EventListener::Invoke(Event* event)
         
         if(currentSubscriber.type == event->GetType() && currentSubscriber.category == event->GetCategory())
         {
-            currentSubscriber.EventFunc(event);
+            TESLA::Application::DispatchEvent(currentSubscriber.function, event);
         }
     }
 }
 
-void TESLA::EventListener::UnSubscribe(void (* EventFunc)(TESLA::Event*))
+void TESLA::EventListener::UnSubscribe(EventFunction function)
 {
     for (int i = 0; i < m_subscribers.size(); ++i)
     {
-        if(m_subscribers[i].EventFunc == EventFunc)
+        if(m_subscribers[i].function == function)
         {
             m_subscribers.erase(m_subscribers.begin() + i);
         }

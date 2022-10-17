@@ -30,14 +30,26 @@ namespace TESLA
     public:
         virtual EventCategory GetCategory() = 0;
         virtual EventType GetType() = 0;
+        void Handle()
+        {
+            m_Handled = true;
+        }
+        bool GetHandled()
+        {
+            return m_Handled;
+        }
+    private:
+        bool m_Handled = false;
     };
+
+    using EventFunction = void (*)(TESLA::Event*);
 
     struct Subscriber
     {
-        Subscriber(void(*EventFunc)(TESLA::Event*), const TESLA::EventType type, const TESLA::EventCategory category)
-            :EventFunc(EventFunc), type(type), category(category){}
+        Subscriber(EventFunction function, const TESLA::EventType type, const TESLA::EventCategory category)
+            :function(function), type(type), category(category){}
         
-        void(*EventFunc)(TESLA::Event*);
+        EventFunction function;
         TESLA::EventType type;
         TESLA::EventCategory category;
     };
@@ -48,7 +60,7 @@ namespace TESLA
         EventListener() = delete;
         static void Invoke(Event* event);
         static void Subscribe(const Subscriber& subscriber);
-        static void UnSubscribe(void(*EventFunc)(TESLA::Event*));
+        static void UnSubscribe(EventFunction function);
     private:
         static std::vector<Subscriber> m_subscribers;
     };

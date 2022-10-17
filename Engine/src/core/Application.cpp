@@ -4,18 +4,44 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+#include "TestLayer.h"
 #include "Window.h"
 
 TESLA::Window* window;
+TESLA::LayerStack TESLA::Application::m_layerStack;
 
 void TESLA::Application::Start(const int& windowWidth,const int& windowHeight, const char* name)
 {
     window = TESLA::Window::Create({windowWidth, windowHeight, name});
+    PushLayer(new TestLayer());
+}
+
+void TESLA::Application::PushLayer(Layer* layer)
+{
+    m_layerStack.PushLayer(layer);
+}
+
+void TESLA::Application::PushOverlay(Layer* overlay)
+{
+    m_layerStack.PushOverlay(overlay);
+}
+
+void TESLA::Application::DispatchEvent(TESLA::EventFunction function, TESLA::Event* event)
+{
+    for(auto layer = m_layerStack.end(); layer != m_layerStack.begin();)
+    {
+        (*--layer)->DispatchEvent(function, event);
+        if(event->GetHandled())
+            break;
+    }
 }
 
 void TESLA::Application::Update()
 {
     window->Update();
+
+    for(Layer* layer : m_layerStack)
+        layer->OnUpdate();
 }
 
 void TESLA::Application::CreateImGUINewFrame()
