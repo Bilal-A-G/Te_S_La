@@ -1,4 +1,5 @@
 ﻿#include "Te_S_La.h"
+#include "utils/events/KeyEvents.h"
 
 int windowHeight = 800;
 int windowWidth = 1200;
@@ -42,34 +43,51 @@ void Init()
     suzanne2 = new TESLA::Model(*suzanne);
     suzanne2->Scale(glm::vec3(0.3,0.3,0.3));
     suzanne2->Translate(glm::vec3(1, 0, 0));
+
+    TESLA::EventListener::Subscribe({[](TESLA::Event* event)
+    {
+        const auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event);
+        switch (castedEvent->GetKeycode())
+        {
+        case GLFW_KEY_O:
+            if(!oToggle)
+                rotate = !rotate;
+            oToggle = true;
+            break;
+        case GLFW_KEY_SPACE:
+            if(!spaceToggle)
+            {
+                perspective = !perspective;
+            }
+            spaceToggle = true;
+            break;
+        case GLFW_KEY_M:
+            TESLA::ExitApplication();
+            break;
+        default:
+            break;
+        }
+    },TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard});
+
+    TESLA::EventListener::Subscribe({[](TESLA::Event* event)
+    {
+        const auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event);
+        switch (castedEvent->GetKeycode())
+        {
+        case GLFW_KEY_O:
+            oToggle = false;
+            break;
+        case GLFW_KEY_SPACE:
+            spaceToggle = false;
+            break;
+        default:
+            break;
+        }
+    }, TESLA::EventType::ButtonReleased, TESLA::EventCategory::Keyboard});
 }
 
 void Render()
 {
-    if(TESLA::Application::GetKey(GLFW_KEY_O) == GLFW_PRESS)
-    {
-        if(!oToggle)
-            rotate = !rotate;
-        oToggle = true;
-    }
-    else
-    {
-        oToggle = false;
-    }
-
-    if(TESLA::Application::GetKey(GLFW_KEY_SPACE) == GLFW_PRESS)
-    {
-        if(!spaceToggle)
-        {
-            perspective = !perspective;
-        }
-        spaceToggle = true;
-    }
-    else
-    {
-        spaceToggle = false;
-    }
-    
     if(rotate)
     {
         angle += 1;

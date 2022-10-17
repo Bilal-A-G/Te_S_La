@@ -64,7 +64,6 @@ void KeyCallback(TESLA::Event* event)
 {
     const auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event);
     const bool pressed = castedEvent->GetType() == TESLA::ButtonPressed;
-    
     switch (castedEvent->GetKeycode())
     {
     case GLFW_KEY_W:
@@ -84,6 +83,7 @@ void KeyCallback(TESLA::Event* event)
         break;
     case GLFW_KEY_LEFT_CONTROL:
         ctrlDown = pressed;
+        break;
     default:
         break;
     }

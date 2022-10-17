@@ -57,9 +57,9 @@ TESLA::WindowsWindow::WindowsWindow(const WindowProperties& properties)
     WindowsWindow::SetVSync(true);
     
     glfwSetWindowCloseCallback(window, [](GLFWwindow* _window){EventListener::Invoke(new WindowClosedEvent());    });
-    glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods){EventListener::Invoke(new MouseButtonEvent(button, action == GLFW_PRESS)); });
+    glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods){EventListener::Invoke(new MouseButtonEvent(button, action == GLFW_PRESS || action == GLFW_REPEAT)); });
     glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos){EventListener::Invoke(new MouseMovedEvent(xpos,ypos)); });
-    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods){EventListener::Invoke(new KeyboardButtonEvent(key, action == GLFW_PRESS)); });
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods){EventListener::Invoke(new KeyboardButtonEvent(key, action == GLFW_PRESS || action == GLFW_REPEAT)); });
     glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset){EventListener::Invoke(new MouseScrolledEvent(xoffset, yoffset));});
 }
 
