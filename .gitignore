@@ -2,7 +2,7 @@
 *.user
 bin/
 int/
-.idea
+.idea/
 *.sln
 *.vcxproj
 *.vcxproj.filters
