@@ -28,10 +28,6 @@ std::vector<TESLA::Model*> sceneObjects;
 void DrawGUIs()
 {
     {
-        TESLA::Application::BeginGUI("NoSelect", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
-        TESLA::Application::EndGUI();
-    }
-    {
         TESLA::Application::BeginGUI("Create");
         if(TESLA::Application::CreateButton("Create Object"))
         {
@@ -90,19 +86,12 @@ void Render()
 {
     for (TESLA::Model* model : sceneObjects)
         model->Draw();
-    
-    if(TESLA::Application::ImGUIWantsMouse())
-    {
-        TESLA::Application::ReturnMouse();
-        return;
-    }
         
     glm::mat4 newView = Camera::CalculateView();
     if(newView != glm::mat4(1))
     {
         view = newView;
     }
-    TESLA::Application::SetImGUIFocus("NoSelect");
 }
 
 void CleanUp()

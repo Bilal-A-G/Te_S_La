@@ -1,29 +1,30 @@
 ﻿#include "TSpch.h"
 #include "Application.h"
-
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
-
-#include "TestLayer.h"
 #include "Window.h"
 
-TESLA::Window* window;
+#include "../layers//GuiLayer.h"
+#include "../layers/GameLayer.h"
+
+TESLA::Window* TESLA::Application::m_window;
 TESLA::LayerStack TESLA::Application::m_layerStack;
 
 void TESLA::Application::Start(const int& windowWidth,const int& windowHeight, const char* name)
 {
-    window = TESLA::Window::Create({windowWidth, windowHeight, name});
-    PushLayer(new TestLayer());
+    m_window = TESLA::Window::Create({windowWidth, windowHeight, name});
+    PushLayer(new GuiLayer());
+    PushLayer(new GameLayer());
 }
 
 void TESLA::Application::PushLayer(Layer* layer)
 {
     m_layerStack.PushLayer(layer);
+    layer->OnAttach();
 }
 
 void TESLA::Application::PushOverlay(Layer* overlay)
 {
     m_layerStack.PushOverlay(overlay);
+    overlay->OnAttach();
 }
 
 void TESLA::Application::DispatchEvent(TESLA::EventFunction function, TESLA::Event* event)
@@ -38,59 +39,27 @@ void TESLA::Application::DispatchEvent(TESLA::EventFunction function, TESLA::Eve
 
 void TESLA::Application::Update()
 {
-    window->Update();
-
     for(Layer* layer : m_layerStack)
         layer->OnUpdate();
 }
 
-void TESLA::Application::CreateImGUINewFrame()
+void TESLA::Application::WindowUpdate()
 {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+    m_window->Update();
+}
+
+void TESLA::Application::LateUpdate()
+{
+    for(Layer* layer : m_layerStack)
+        layer->OnLateUpdate();
 }
 
 void TESLA::Application::Terminate()
 {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
+    for(Layer* layer : m_layerStack)
+        layer->OnDetach();
+    
     glfwTerminate();
-}
-
-void TESLA::Application::ImGUIRender()
-{
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-bool TESLA::Application::ImGUIWantsMouse()
-{
-    return ImGui::GetIO().WantCaptureMouse;
-}
-
-bool TESLA::Application::ImGUIWantsKeyboard()
-{
-    return ImGui::GetIO().WantCaptureKeyboard;
-}
-
-
-void TESLA::Application::ReturnMouse()
-{
-    //SetMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
-}
-
-void TESLA::Application::ReturnCursor()
-{
-    //SetMouseCursorCallback(ImGui_ImplGlfw_CursorPosCallback);
-}
-
-
-void TESLA::Application::SetImGUIFocus(const char* windowName)
-{
-    ImGui::SetWindowFocus(windowName);
 }
 
 double TESLA::Application::GetTime()
@@ -121,12 +90,7 @@ void TESLA::Application::EndGUI()
 
 void TESLA::Application::SetInputMode(int mode, int value)
 {
-    window->SetInputMode(mode, value);
-}
-
-void TESLA::Application::InitImGUI()
-{
-    window->InitImGUI();
+    m_window->SetInputMode(mode, value);
 }
 
 

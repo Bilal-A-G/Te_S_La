@@ -50,7 +50,6 @@ void MouseCallback(TESLA::Event* event)
     {
         TESLA::EventListener::UnSubscribe(CursorCallback);
         TESLA::Application::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        TESLA::Application::ReturnCursor();
         focused = true;
     }
     else if(castedEvent->GetType() == TESLA::ButtonPressed)
@@ -114,12 +113,6 @@ glm::mat4 Camera::CalculateView()
     const glm::vec3 cameraRight = glm::normalize(glm::cross(globalUpVector, cameraDirection));
     const glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
     const float cameraSpeed = moveSpeed * deltaTime;
-
-    if(TESLA::Application::ImGUIWantsKeyboard())
-    {
-        focused = true;
-        return glm::mat4(1);
-    }
 
     if(wDown)
     {

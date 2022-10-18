@@ -1,31 +1,25 @@
 ﻿#pragma once
 #include <imgui/imgui.h>
 
+#include "Window.h"
 #include "../core/Core.h"
 #include "../utils/events/LayerStack.h"
-#include "GLFW/glfw3.h"
 
 namespace TESLA
 {
     class TS_DLL Application
     {
     public:
-        //GLFW stuff
+        //App stuff
         static void Start(const int& windowWidth,const int& windowHeight, const char* name);
         static void Update();
+        static void LateUpdate();
+        static void WindowUpdate();
         static void Terminate();
+        
+        //GLFW stuff
         static void SetInputMode(int mode, int value);
         static double GetTime();
-
-        //ImGUI stuff
-        static void InitImGUI();
-        static void CreateImGUINewFrame();
-        static void SetImGUIFocus(const char* windowName);
-        static void ImGUIRender();
-        static bool ImGUIWantsMouse();
-        static bool ImGUIWantsKeyboard();
-        static void ReturnMouse();
-        static void ReturnCursor();
 
         //ImGUI GUI creation
         static void BeginGUI(const char* name, bool* _openWidget = nullptr, const ImGuiWindowFlags& flags = 0);
@@ -36,7 +30,12 @@ namespace TESLA
         static void PushLayer(Layer* layer);
         static void PushOverlay(Layer* overlay);
         static void DispatchEvent(TESLA::EventFunction function, TESLA::Event* event);
+        static TESLA::Window* GetWindow()
+        {
+            return m_window;
+        }
     private:
         static LayerStack m_layerStack;
+        static TESLA::Window* m_window;
     };
 }
