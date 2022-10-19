@@ -43,6 +43,40 @@ void DrawGUIs()
     }
 }
 
+void HandleKeyboardEvents(TESLA::Event* event)
+{
+    switch (const auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event); castedEvent->GetKeycode())
+    {
+    case GLFW_KEY_ESCAPE:
+        TESLA::ExitApplication();
+        [[fallthrough]];
+    default:
+        break;
+    }
+}
+
+void HandleMouseEvents(TESLA::Event* event)
+{
+    TESLA_PHYSICS::RaycastResult result{};
+    
+    switch (const auto castedEvent = dynamic_cast<TESLA::MouseButtonEvent*>(event); castedEvent->GetKeycode())
+    {
+    case GLFW_MOUSE_BUTTON_LEFT:
+        if (TESLA_PHYSICS::Raycaster::Raycast(Camera::cameraPosition, Camera::cameraDirection, 1000, 1000, sceneObjects, result))
+        {
+            TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
+            activeModel = result.hitObject;
+        }
+        else
+        {   
+            activeModel = nullptr;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 void Init()
 {
     TESLA::Application::Start(windowWidth, windowHeight, "Editor");
@@ -53,32 +87,9 @@ void Init()
     sceneObjects.push_back(ImportModel("cube.obj", "Cube 2"));
     sceneObjects[1] ->Translate(glm::vec3(2, 2, 2));
 
-    TESLA::EventListener::Subscribe({[](TESLA::Event* event)
-    {
-        auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event);
-        if(castedEvent->GetKeycode() == GLFW_KEY_ESCAPE)
-        {
-            TESLA::ExitApplication();
-        }
-        else if(castedEvent->GetKeycode() == GLFW_KEY_F)
-        {
-            glm::vec3 cameraPosition = Camera::cameraPosition;
-            glm::vec3 cameraDirection = Camera::cameraDirection;
-        
-            TESLA_PHYSICS::RaycastResult result;
-            if (TESLA_PHYSICS::Raycaster::Raycast(cameraPosition, cameraDirection, 1000, 1000, sceneObjects, result))
-            {
-                TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
-                activeModel = result.hitObject;
-            }
-            else
-            {   
-                activeModel = nullptr;
-            }
-        }
-    },TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard
-    });
-
+    TESLA::EventListener::Subscribe({HandleKeyboardEvents, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard});
+    TESLA::EventListener::Subscribe({HandleMouseEvents, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Mouse});
+    
     Camera::Init();
 }
 
