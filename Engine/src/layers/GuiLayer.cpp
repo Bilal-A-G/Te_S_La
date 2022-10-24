@@ -6,9 +6,12 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+bool showDemoWindow = true;
+
 void TESLA::GuiLayer::OnAttach()
 {
     TESLA::Application::GetWindow()->InitImGUI();
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
 void TESLA::GuiLayer::OnDetach()
@@ -23,6 +26,9 @@ void TESLA::GuiLayer::OnUpdate()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    if(showDemoWindow)
+        ImGui::ShowDemoWindow(&showDemoWindow);
 }
 
 void TESLA::GuiLayer::OnLateUpdate()
