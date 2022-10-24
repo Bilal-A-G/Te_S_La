@@ -27,7 +27,7 @@ namespace TESLA
 
         virtual void InitImGUI() = 0;
         virtual bool WindowShouldClose() = 0;
-        virtual void SetInputMode(int mode, int value) = 0;
+        virtual void* GetWindow() = 0;
     
         static Window* Create(const WindowProperties& properties);
         static Window* Create(const char* name){return Create({1200, 800, name});}

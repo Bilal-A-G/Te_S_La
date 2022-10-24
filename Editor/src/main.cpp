@@ -1,5 +1,6 @@
 ﻿#include "Te_S_La.h"
 #include "Camera.h"
+#include "input/Input.h"
 #include "utils/events/KeyEvents.h"
 #include "utils/physics/Physics.h"
 

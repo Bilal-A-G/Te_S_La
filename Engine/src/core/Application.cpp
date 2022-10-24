@@ -62,11 +62,6 @@ void TESLA::Application::Terminate()
     glfwTerminate();
 }
 
-double TESLA::Application::GetTime()
-{
-    return glfwGetTime();
-}
-
 bool TESLA::Application::CreateButton(const char* name)
 {
     return ImGui::Button(name);
@@ -86,11 +81,6 @@ bool TESLA::Application::CreateInputText(const char* label, char* buf, size_t bu
 void TESLA::Application::EndGUI()
 {
     ImGui::End();
-}
-
-void TESLA::Application::SetInputMode(int mode, int value)
-{
-    m_window->SetInputMode(mode, value);
 }
 
 

@@ -30,8 +30,8 @@ namespace TESLA
         int GetWidth() override {return m_data->width; }
 
         void InitImGUI() override;
+        void* GetWindow() override;
         bool WindowShouldClose() override;
-        void SetInputMode(int mode, int value) override;
 
         std::string GetName() override {return m_data->name; }
         bool GetVSync() override {return m_data->vSync; }

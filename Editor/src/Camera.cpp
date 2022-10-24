@@ -2,6 +2,7 @@
 
 #include <glm/ext/matrix_transform.hpp>
 #include "core//Application.h"
+#include "input/Input.h"
 #include "utils/events/Event.h"
 #include "utils/events/KeyEvents.h"
 #include "utils/events/MouseEvents.h"
@@ -45,17 +46,17 @@ void MouseCallback(TESLA::Event* event)
 {
     const auto castedEvent = dynamic_cast<TESLA::MouseButtonEvent*>(event);
     if(castedEvent->GetKeycode() != GLFW_MOUSE_BUTTON_RIGHT) return;
-
+    
     if(castedEvent->GetType() == TESLA::ButtonReleased)
     {
         TESLA::EventListener::UnSubscribe(CursorCallback);
-        TESLA::Application::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        TESLA::Input::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         focused = true;
     }
     else if(castedEvent->GetType() == TESLA::ButtonPressed)
     {
         TESLA::EventListener::Subscribe({CursorCallback, TESLA::EventType::MouseMoved, TESLA::EventCategory::Mouse});
-        TESLA::Application::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        TESLA::Input::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
 
@@ -102,7 +103,7 @@ void Camera::Init()
 
 glm::mat4 Camera::CalculateView()
 {
-    deltaTime = TESLA::Application::GetTime() - timeLastFrame;
+    deltaTime = TESLA::Input::GetTime() - timeLastFrame;
 
     cameraDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraDirection.y = sin(glm::radians(pitch));
@@ -139,7 +140,7 @@ glm::mat4 Camera::CalculateView()
         cameraPosition -= cameraUp * cameraSpeed;
     }
 
-    timeLastFrame = TESLA::Application::GetTime();
+    timeLastFrame = TESLA::Input::GetTime();
     
     return glm::lookAt(cameraPosition, cameraPosition + cameraDirection, globalUpVector);
 }

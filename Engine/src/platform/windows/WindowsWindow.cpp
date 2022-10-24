@@ -69,11 +69,6 @@ void TESLA::WindowsWindow::SetVSync(const bool& set)
     m_data->vSync = set;
 }
 
-void TESLA::WindowsWindow::SetInputMode(int mode, int value)
-{
-    glfwSetInputMode(m_data->window, mode, value);
-}
-
 bool TESLA::WindowsWindow::WindowShouldClose()
 {
     return glfwWindowShouldClose(m_data->window);
@@ -87,6 +82,12 @@ void TESLA::WindowsWindow::InitImGUI()
     ImGui_ImplGlfw_InitForOpenGL(m_data->window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 }
+
+void* TESLA::WindowsWindow::GetWindow()
+{
+    return m_data->window;
+}
+
 
 
 

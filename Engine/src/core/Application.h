@@ -16,10 +16,6 @@ namespace TESLA
         static void LateUpdate();
         static void WindowUpdate();
         static void Terminate();
-        
-        //GLFW stuff
-        static void SetInputMode(int mode, int value);
-        static double GetTime();
 
         //ImGUI GUI creation
         static void BeginGUI(const char* name, bool* _openWidget = nullptr, const ImGuiWindowFlags& flags = 0);
