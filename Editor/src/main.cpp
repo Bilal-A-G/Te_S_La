@@ -43,25 +43,17 @@ void DrawGUIs()
     }
 }
 
-void HandleKeyboardEvents(TESLA::Event* event)
-{
-    switch (const auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event); castedEvent->GetKeycode())
-    {
-    case GLFW_KEY_ESCAPE:
-        TESLA::ExitApplication();
-        [[fallthrough]];
-    default:
-        break;
-    }
-}
+TESLA_PHYSICS::RaycastResult result{};
 
-void HandleMouseEvents(TESLA::Event* event)
+void ProcessInput()
 {
-    TESLA_PHYSICS::RaycastResult result{};
-    
-    switch (const auto castedEvent = dynamic_cast<TESLA::MouseButtonEvent*>(event); castedEvent->GetKeycode())
+    if(TESLA::Input::GetKeyDown(GLFW_KEY_ESCAPE))
     {
-    case GLFW_MOUSE_BUTTON_LEFT:
+        TESLA::ExitApplication();
+    }
+
+    if(TESLA::Input::GetMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+    {
         if (TESLA_PHYSICS::Raycaster::Raycast(Camera::cameraPosition, Camera::cameraDirection, 1000, 1000, sceneObjects, result))
         {
             TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Hit {0}", result.hitObject->name);
@@ -71,9 +63,6 @@ void HandleMouseEvents(TESLA::Event* event)
         {   
             activeModel = nullptr;
         }
-        break;
-    default:
-        break;
     }
 }
 
@@ -86,9 +75,6 @@ void Init()
 
     sceneObjects.push_back(ImportModel("cube.obj", "Cube 2"));
     sceneObjects[1] ->Translate(glm::vec3(2, 2, 2));
-
-    TESLA::EventListener::Subscribe({HandleKeyboardEvents, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard});
-    TESLA::EventListener::Subscribe({HandleMouseEvents, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Mouse});
     
     Camera::Init();
 }
@@ -103,6 +89,8 @@ void Render()
     {
         view = newView;
     }
+
+    ProcessInput();
 }
 
 void CleanUp()

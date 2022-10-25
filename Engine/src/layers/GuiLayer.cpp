@@ -6,7 +6,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-bool showDemoWindow = true;
+bool showDemoWindow = false;
 
 void TESLA::GuiLayer::OnAttach()
 {

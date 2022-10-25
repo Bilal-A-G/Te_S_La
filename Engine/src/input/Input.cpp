@@ -51,7 +51,7 @@ void TESLA::Input::Update()
     {
         for(int i = 0; i < currentMouseButtonsDown.size(); i++)
         {
-            if(glfwGetKey(window, currentMouseButtonsDown[i]) == GLFW_RELEASE)
+            if(glfwGetMouseButton(window, currentMouseButtonsDown[i]) == GLFW_RELEASE)
             {
                 currentMouseButtonsDown.erase(currentMouseButtonsDown.begin() + i);
             }
