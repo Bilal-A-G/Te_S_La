@@ -80,7 +80,6 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     return shader;
 }
 
-//Creates a shader program from compiled shaders
 GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
 {
     const GLuint shader_program = glCreateProgram();
