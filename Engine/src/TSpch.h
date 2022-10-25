@@ -13,8 +13,8 @@
 #include "utility"
 #include "algorithm"
 
-#include "utils/logging/Logger.h"
-#include "utils/events/Event.h"
+#include "Logging/Logger.h"
+#include "EventSystem/EventSystem.h"
 
 #ifdef TS_WIN
 #include "Windows.h"

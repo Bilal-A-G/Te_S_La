@@ -1,7 +1,9 @@
 ﻿#include "Te_S_La.h"
 #include "Camera.h"
-#include "utils/events/KeyEvents.h"
-#include "utils/physics/Physics.h"
+#include "physics/Physics.h"
+#include "Rendering/Shader.h"
+#include"imgui/imgui.h"
+#include "GLFW/glfw3.h"
 
 int windowHeight = 800;
 int windowWidth = 1200;

@@ -1,5 +1,9 @@
-﻿#include "Te_S_La.h"
-#include "utils/events/KeyEvents.h"
+﻿#include <imgui/imgui.h>
+
+#include "Te_S_La.h"
+#include "Model/Model.h"
+#include "Rendering/Shader.h"
+#include "GLFW/glfw3.h"
 
 int windowHeight = 800;
 int windowWidth = 1200;

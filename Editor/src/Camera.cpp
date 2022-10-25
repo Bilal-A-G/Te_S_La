@@ -1,11 +1,9 @@
 ﻿#include "Camera.h"
-
 #include <glm/ext/matrix_transform.hpp>
-#include "core//Application.h"
-#include "input/Input.h"
-#include "utils/events/Event.h"
-#include "utils/events/KeyEvents.h"
-#include "utils/events/MouseEvents.h"
+#include "Core/Application.h"
+#include "Input/Input.h"
+
+#include "GLFW/glfw3.h"
 
 glm::vec3 globalUpVector = glm::vec3(0, 1, 0);
 
@@ -20,8 +18,6 @@ float timeLastFrame;
 
 glm::vec2 mousePosLastFrame;
 glm::vec2 mouseDelta;
-
-bool wDown,aDown,sDown,dDown,spaceDown,ctrlDown;
 
 void CursorCallback(TESLA::Event* event)
 {
@@ -42,64 +38,10 @@ void CursorCallback(TESLA::Event* event)
     mousePosLastFrame = glm::vec2(castedEvent->GetMouseX(), castedEvent->GetMouseY());
 }
 
-void MouseCallback(TESLA::Event* event)
-{
-    const auto castedEvent = dynamic_cast<TESLA::MouseButtonEvent*>(event);
-    if(castedEvent->GetKeycode() != GLFW_MOUSE_BUTTON_RIGHT) return;
-    
-    if(castedEvent->GetType() == TESLA::ButtonReleased)
-    {
-        TESLA::EventListener::UnSubscribe(CursorCallback);
-        TESLA::Input::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        focused = true;
-    }
-    else if(castedEvent->GetType() == TESLA::ButtonPressed)
-    {
-        TESLA::EventListener::Subscribe({CursorCallback, TESLA::EventType::MouseMoved, TESLA::EventCategory::Mouse});
-        TESLA::Input::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-}
-
-void KeyCallback(TESLA::Event* event)
-{
-    const auto castedEvent = dynamic_cast<TESLA::KeyboardButtonEvent*>(event);
-    const bool pressed = castedEvent->GetType() == TESLA::ButtonPressed;
-    switch (castedEvent->GetKeycode())
-    {
-    case GLFW_KEY_W:
-        wDown = pressed;
-        break;
-    case GLFW_KEY_S:
-        sDown = pressed;
-        break;
-    case GLFW_KEY_A:
-        aDown = pressed;
-        break;
-    case GLFW_KEY_D:
-        dDown = pressed;
-        break;
-    case GLFW_KEY_SPACE:
-        spaceDown = pressed;
-        break;
-    case GLFW_KEY_LEFT_CONTROL:
-        ctrlDown = pressed;
-        break;
-    default:
-        break;
-    }
-}
-
 void Camera::Init()
 {
-    TESLA::EventListener::Subscribe({MouseCallback, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Mouse});
-    TESLA::EventListener::Subscribe({MouseCallback, TESLA::EventType::ButtonReleased, TESLA::EventCategory::Mouse});
-
-    TESLA::EventListener::Subscribe({KeyCallback, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard});
-    TESLA::EventListener::Subscribe({KeyCallback, TESLA::EventType::ButtonReleased, TESLA::EventCategory::Keyboard});
-
     focused = true;
 }
-
 
 glm::mat4 Camera::CalculateView()
 {
@@ -115,27 +57,39 @@ glm::mat4 Camera::CalculateView()
     const glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
     const float cameraSpeed = moveSpeed * deltaTime;
 
-    if(wDown)
+    if(TESLA::Input::GetMouseButtonUp(GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        TESLA::EventListener::UnSubscribe(CursorCallback);
+        TESLA::Input::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        focused = true;
+    }
+    else if(TESLA::Input::GetMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        TESLA::EventListener::Subscribe({CursorCallback, TESLA::EventType::MouseMoved, TESLA::EventCategory::Mouse});
+        TESLA::Input::SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    if(TESLA::Input::GetKeyHeld(GLFW_KEY_W))
     {
         cameraPosition += cameraDirection * cameraSpeed;
     }
-    if(sDown)
+    if(TESLA::Input::GetKeyHeld(GLFW_KEY_S))
     {
         cameraPosition -= cameraDirection * cameraSpeed;
     }
-    if(aDown)
+    if(TESLA::Input::GetKeyHeld(GLFW_KEY_A))
     {
         cameraPosition += cameraRight * cameraSpeed;
     }
-    if(dDown)
+    if(TESLA::Input::GetKeyHeld(GLFW_KEY_D))
     {
         cameraPosition -= cameraRight * cameraSpeed;
     }
-    if(spaceDown)
+    if(TESLA::Input::GetKeyHeld(GLFW_KEY_SPACE))
     {
         cameraPosition += cameraUp * cameraSpeed;
     }
-    if(ctrlDown)
+    if(TESLA::Input::GetKeyHeld(GLFW_KEY_LEFT_CONTROL))
     {
         cameraPosition -= cameraUp * cameraSpeed;
     }
