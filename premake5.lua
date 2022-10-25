@@ -11,8 +11,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "Engine"
     location "Engine"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("int/" .. outputdir .. "/%{prj.name}")
@@ -44,8 +46,6 @@ project "Engine"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -56,8 +56,6 @@ project "Engine"
 
         postbuildcommands
         {
-            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/%{prj.name}"),
-            ("{Copy} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Executables"),
             ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/Executables")
         }
 
@@ -76,8 +74,11 @@ project "Game"
     location "Game"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
     targetdir ("bin/" .. outputdir .. "/Executables")
     objdir ("int/" .. outputdir .. "/%{prj.name}")
+
+    staticruntime "On"
 
     includedirs
     {
@@ -106,8 +107,6 @@ project "Game"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -127,8 +126,11 @@ project "Editor"
     location "Editor"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
     targetdir ("bin/" .. outputdir .. "/Executables")
     objdir ("int/" .. outputdir .. "/%{prj.name}")
+
+    staticruntime "On"
 
     includedirs
     {
@@ -158,8 +160,6 @@ project "Editor"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
