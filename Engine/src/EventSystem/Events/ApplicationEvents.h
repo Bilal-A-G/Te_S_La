@@ -61,6 +61,10 @@ namespace TESLA
         {
             return m_windowWidth;
         }
+        EventType GetType() override
+        {
+            return TESLA::EventType::WindowResized;
+        }
     private:
         unsigned int m_windowHeight, m_windowWidth;
     };

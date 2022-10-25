@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../TSpch.h"
+#include "../Rendering/GraphicsContext.h"
 
 namespace TESLA
 {
@@ -22,13 +23,14 @@ namespace TESLA
 
         virtual void SetVSync(const bool& set) = 0;
         virtual bool GetVSync() = 0;
-
-        virtual void InitImGUI() = 0;
+        
         virtual bool WindowShouldClose() = 0;
-        virtual void* GetWindow() = 0;
+        virtual void* GetNativeWindow() = 0;
     
         static Window* Create(const WindowProperties& properties);
         static Window* Create(const char* name){return Create({1200, 800, name});}
+    public:
+        TESLA::GraphicsContext* m_context;
     };
 
 }

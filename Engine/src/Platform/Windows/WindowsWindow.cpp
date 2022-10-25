@@ -1,22 +1,16 @@
 ﻿#include "TSpch.h"
 #include "WindowsWindow.h"
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
-
 #include "../../EventSystem/EventSystem.h"
-#include "../../Rendering/GLADWrapper.h"
+#include "../OpenGL/OpenGLContext.h"
 
 void LogGLFWErrors(int id, const char* error_message) {TS_LOG_MESSAGE(TESLA_LOGGER::ERR, "GLFW error: {0}, ID = {1}", error_message, id);}
-void ResizeWindow(GLFWwindow* _, int width, int height) {TESLA::GLADWrapper::UpdateViewport(width, height);}
-
 static bool initializedGLFW;
 
 void TESLA::WindowsWindow::Update()
 {
     glfwPollEvents();
-    glfwSwapBuffers(m_data->window);
+    m_context->SwapBuffers();
 }
 
 TESLA::Window* TESLA::Window::Create(const WindowProperties& properties)
@@ -37,24 +31,24 @@ TESLA::WindowsWindow::WindowsWindow(const WindowProperties& properties)
     }
     
     GLFWwindow* window = glfwCreateWindow(properties.width, properties.height, properties.name.data(), nullptr, nullptr);
-    glfwMakeContextCurrent(window);
-
     TS_LOG_ASSERTION((window != nullptr), TESLA_LOGGER::ERR, "Failed to create window");
     TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Successfully created window, width = {0}, height = {1}, name = {2}", properties.width, properties.height, properties.name);
 
     m_data = new WindowsWindowProperties(properties.width, properties.height, properties.name.data(), true, window);
+    m_context = new TESLA::OpenGLContext(m_data->window);
     
-    const bool gladLoaded = TESLA::GLADWrapper::LoadGLAD(glfwGetProcAddress);
+    m_context->Init();
 
-    TS_LOG_ASSERTION(gladLoaded, TESLA_LOGGER::ERR, "Failed to load GLAD");
-    TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Successfully loaded GLAD");
-    
-    TESLA::GLADWrapper::UpdateViewport(properties.width, properties.height);
-    glfwSetFramebufferSizeCallback(m_data->window, ResizeWindow);
+    m_context->ResizeBuffer(properties.width, properties.height);
+    glfwSetFramebufferSizeCallback(m_data->window, [](GLFWwindow* _, int width, int height)
+    {
+        glViewport(0,0, width, height);
+        EventListener::Invoke(new WindowResizedEvent(height, width));
+    });
 
     WindowsWindow::SetVSync(true);
     
-    glfwSetWindowCloseCallback(window, [](GLFWwindow* _window){EventListener::Invoke(new WindowClosedEvent());    });
+    glfwSetWindowCloseCallback(window, [](GLFWwindow* _window){EventListener::Invoke(new WindowClosedEvent());});
     glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods){EventListener::Invoke(new MouseButtonEvent(button, action == GLFW_PRESS || action == GLFW_REPEAT)); });
     glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos){EventListener::Invoke(new MouseMovedEvent(xpos,ypos)); });
     glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods){EventListener::Invoke(new KeyboardButtonEvent(key, action == GLFW_PRESS || action == GLFW_REPEAT)); });
@@ -72,16 +66,7 @@ bool TESLA::WindowsWindow::WindowShouldClose()
     return glfwWindowShouldClose(m_data->window);
 }
 
-void TESLA::WindowsWindow::InitImGUI()
-{
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(m_data->window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-}
-
-void* TESLA::WindowsWindow::GetWindow()
+void* TESLA::WindowsWindow::GetNativeWindow()
 {
     return m_data->window;
 }

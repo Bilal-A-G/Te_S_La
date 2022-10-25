@@ -2,7 +2,6 @@
 #include "TSpch.h"
 #include "Application.h"
 #include "input/Input.h"
-#include "rendering/GLADWrapper.h"
 
 inline bool runApplication = true;
 
@@ -29,7 +28,7 @@ int main(int argc, char* argv[])
     while (runApplication)
     {
         TESLA::Application::WindowUpdate();
-        TESLA::GLADWrapper::OpenGLRender();
+        TESLA::Application::GetWindow()->m_context->RenderLoop();
         TESLA::Application::Update();
         TESLA::Input::Update();
         Render();

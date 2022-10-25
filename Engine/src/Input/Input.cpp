@@ -28,7 +28,7 @@ void AddToCurrMouseButtons(TESLA::Event* event)
 void TESLA::Input::Init()
 {
     TESLA::Window* tsWindow = TESLA::Application::GetWindow();
-    window = static_cast<GLFWwindow*>(tsWindow->GetWindow());
+    window = static_cast<GLFWwindow*>(tsWindow->GetNativeWindow());
     
     TESLA::EventListener::Subscribe({AddToCurrKeys, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Keyboard});
     TESLA::EventListener::Subscribe({AddToCurrMouseButtons, TESLA::EventType::ButtonPressed, TESLA::EventCategory::Mouse});

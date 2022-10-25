@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "../../core/Window.h"
 #include "GLFW/glfw3.h"
 
@@ -28,9 +27,8 @@ namespace TESLA
         void Update() override;
         int GetHeight() override {return m_data->height;}
         int GetWidth() override {return m_data->width; }
-
-        void InitImGUI() override;
-        void* GetWindow() override;
+        
+        void* GetNativeWindow() override;
         bool WindowShouldClose() override;
 
         std::string GetName() override {return m_data->name; }

@@ -10,7 +10,12 @@ bool showDemoWindow = false;
 
 void TESLA::GuiLayer::OnAttach()
 {
-    TESLA::Application::GetWindow()->InitImGUI();
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(TESLA::Application::GetWindow()->GetNativeWindow()), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+    
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
