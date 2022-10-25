@@ -28,18 +28,18 @@ std::vector<TESLA::Model*> sceneObjects;
 void DrawGUIs()
 {
     {
-        TESLA::Application::BeginGUI("Create");
-        if(TESLA::Application::CreateButton("Create Object"))
+        ImGui::Begin("Create");
+        if(ImGui::Button("Create Object"))
         {
             sceneObjects.push_back(ImportModel("cube.obj", "Joe Mama"));
         }
-        TESLA::Application::EndGUI();
+        ImGui::End();
     }
     {
-        TESLA::Application::BeginGUI("Export");
-        TESLA::Application::CreateButton("Export Scene To File");
-        TESLA::Application::CreateInputText("Scene name", sceneTextBuffer, sizeof(sceneTextBuffer), ImGuiInputTextFlags_AutoSelectAll);
-        TESLA::Application::EndGUI();
+        ImGui::Begin("Export");
+        ImGui::Button("Export Scene To File");
+        ImGui::InputText("Scene name", sceneTextBuffer, sizeof(sceneTextBuffer), ImGuiInputTextFlags_AutoSelectAll);
+        ImGui::End();
     }
 }
 

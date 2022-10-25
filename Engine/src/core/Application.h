@@ -17,12 +17,6 @@ namespace TESLA
         static void WindowUpdate();
         static void Terminate();
 
-        //ImGUI GUI creation
-        static void BeginGUI(const char* name, bool* _openWidget = nullptr, const ImGuiWindowFlags& flags = 0);
-        static void EndGUI();
-        static bool CreateButton(const char* name);
-        static bool CreateInputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = 0, void* user_data = 0);
-
         static void PushLayer(Layer* layer);
         static void PushOverlay(Layer* overlay);
         static void DispatchEvent(TESLA::EventFunction function, TESLA::Event* event);

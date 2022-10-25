@@ -62,27 +62,5 @@ void TESLA::Application::Terminate()
     glfwTerminate();
 }
 
-bool TESLA::Application::CreateButton(const char* name)
-{
-    return ImGui::Button(name);
-}
-
-void TESLA::Application::BeginGUI(const char* name, bool* openWidget, const ImGuiWindowFlags& flags)
-{
-    ImGui::Begin(name, openWidget, flags);
-}
-
-bool TESLA::Application::CreateInputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
-{
-    return ImGui::InputText(label, buf, buf_size, flags, callback, user_data);
-}
-
-
-void TESLA::Application::EndGUI()
-{
-    ImGui::End();
-}
-
-
 
 

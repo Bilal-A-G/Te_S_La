@@ -30,7 +30,11 @@ TESLA::Model* CreateMesh(const char* fileName, const char* modelName)
     return new TESLA::Model(fileName, modelName, shaderProgram, view, projection);
 }
 
-void DrawGUIs(){return;}
+void DrawGUIs()
+{
+    ImGui::Text("Hello world");
+    ImGui::Button("Hi there");
+}
 
 void Init()
 {

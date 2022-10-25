@@ -25,8 +25,18 @@ project "Engine"
         "external"
     }
 
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+
     pchheader "TSpch.h"
     pchsource "Engine/src/TSpch.cpp"
+
+    postbuildcommands
+    {
+        ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/Executables")
+    }
 
     files
     {
@@ -39,7 +49,6 @@ project "Engine"
     links
     {
         "glfw3_mt",
-        "glfw3",
         "OpenGL32",
         "assimp-vc142-mt",
         "imgui"
@@ -52,11 +61,6 @@ project "Engine"
         {
             "TS_WIN",
             "TS_ENGINE"
-        }
-
-        postbuildcommands
-        {
-            ("{COPY} ../external/assimp" .. " ../bin/" .. outputdir .. "/Executables")
         }
 
     filter "configurations:Debug"
@@ -87,8 +91,6 @@ project "Game"
         "external"
     }
 
-    libdirs("Engine/lib")
-
     files
     {
         "%{prj.name}/**.h",
@@ -99,10 +101,6 @@ project "Game"
 
     links
     {
-        "glfw3_mt",
-        "glfw3",
-        "OpenGL32",
-        "assimp-vc142-mt",
         "Engine",
     }
 
@@ -139,8 +137,6 @@ project "Editor"
         "external"
     }
 
-    libdirs("Engine/lib")
-
     files
     {
         "%{prj.name}/**.h",
@@ -151,12 +147,7 @@ project "Editor"
 
     links
     {
-        "glfw3_mt",
-        "glfw3",
-        "OpenGL32",
-        "assimp-vc142-mt",
         "Engine",
-        "imgui"
     }
 
     filter "system:windows"
