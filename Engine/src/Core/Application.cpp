@@ -9,9 +9,15 @@
 TESLA::Window* TESLA::Application::m_window;
 TESLA::LayerStack TESLA::Application::m_layerStack;
 
+TESLA::VertexBuffer* TESLA::Application::m_vbo;
+TESLA::ElementBuffer* TESLA::Application::m_ebo;
+
 void TESLA::Application::Start(const int& windowWidth,const int& windowHeight, const char* name)
 {
     m_window = TESLA::Window::Create({windowWidth, windowHeight, name});
+    m_ebo = TESLA::ElementBuffer::Create();
+    m_vbo = TESLA::VertexBuffer::Create();
+    
     PushLayer(new GuiLayer());
     PushLayer(new GameLayer());
 }

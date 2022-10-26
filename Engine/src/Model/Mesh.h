@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <glm/gtc/matrix_transform.hpp>
-#include "glad/glad.h"
 #include "../TSpch.h"
-
+#include "../Rendering/Buffer.h"
 
 namespace TESLA
 {
@@ -21,13 +20,14 @@ namespace TESLA
     public:
         glm::vec3 position = glm::vec3(0);
         
-        Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+        Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const int32_t& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_vertices = vertices;
             m_indices = indices;
             m_shaderProgram = shaderProgram;
-            this->SetupGLObjects();
+            
+            this->SetupMesh();
         }
 
         Mesh& operator=(const Mesh& mesh)
@@ -41,18 +41,19 @@ namespace TESLA
         void Rotate(float angle, glm::vec3 upVector);
         void Scale(glm::vec3 scale);
     
-        const GLuint GetShaderProgram()
+        const int32_t GetShaderProgram()
         {
             return m_shaderProgram;
         }
     private:
-        void SetupGLObjects();
+        void SetupMesh();
         void UpdateMVPMatrix();
     
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
-        GLuint m_shaderProgram;
-        GLuint m_vao;
+        int32_t m_shaderProgram;
+        
+        TESLA::ArrayBuffer* m_vao;
 
         glm::mat4 m_scaleMatrix = IDENTITY_MAT;
         glm::mat4 m_rotationMatrix = IDENTITY_MAT;

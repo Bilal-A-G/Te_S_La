@@ -16,7 +16,7 @@ namespace TESLA
             name = model.name;
         }
         
-        Model(const char* fileName, const char* modelname, const GLuint& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+        Model(const char* fileName, const char* modelname, const int32_t& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_shaderProgram = shaderProgram;
@@ -39,7 +39,7 @@ namespace TESLA
     
         std::vector<Mesh> m_meshes;
 
-        GLuint m_shaderProgram;
+        int32_t m_shaderProgram;
     
         glm::mat4& m_viewMatrix;
         glm::mat4& m_projectionMatrix;

@@ -8,18 +8,18 @@ namespace TESLA
     const char* vertex_shader_source_path = "../Engine/src/Rendering/DefaultShaders/vertex.glsl";
     const char* fragment_shader_source_path = "../Engine/src/Rendering/DefaultShaders/fragment.glsl";
 
-GLuint Shader::GetProgram()
+int32_t Shader::GetProgram()
 {
-    GLuint compiled_shaders[num_shaders];
+    int32_t compiled_shaders[num_shaders];
     compiled_shaders[0] = CompileShader(vertex_shader_source_path, GL_VERTEX_SHADER);
     compiled_shaders[1] = CompileShader(fragment_shader_source_path, GL_FRAGMENT_SHADER);
 
-    const GLuint* array_ptr = compiled_shaders;
+    const int32_t* array_ptr = compiled_shaders;
 
     return CreateShaderProgram(array_ptr);
 }
 
-GLuint Shader::CompileShader(const char* file_path, const GLenum type)
+int32_t Shader::CompileShader(const char* file_path, const GLenum type)
 {
     std::ifstream shader_file;
     std::string shader_code;
@@ -80,7 +80,7 @@ GLuint Shader::CompileShader(const char* file_path, const GLenum type)
     return shader;
 }
 
-GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
+int32_t Shader::CreateShaderProgram(const int32_t* compiled_shaders)
 {
     const GLuint shader_program = glCreateProgram();
     
@@ -109,6 +109,7 @@ GLuint Shader::CreateShaderProgram(const GLuint* compiled_shaders)
 #endif
     return shader_program;
 }
+    
 }
 
 

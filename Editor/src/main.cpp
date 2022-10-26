@@ -20,7 +20,7 @@ glm::mat4 view = glm::mat4(0);
 TESLA::Model* ImportModel(const char* fileName, const char* modelName)
 {
     TESLA::Shader basicShader;
-    GLuint shaderProgram = basicShader.GetProgram();
+    int32_t shaderProgram = basicShader.GetProgram();
 
     return new TESLA::Model{fileName, modelName, shaderProgram, view, projection};
 }

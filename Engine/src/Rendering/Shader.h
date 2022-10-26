@@ -6,9 +6,9 @@ namespace TESLA
     class Shader
     {
     public:
-        GLuint GetProgram();
+        int32_t GetProgram();
     private:
-        GLuint CompileShader(const char* file_path, const GLenum type);
-        GLuint CreateShaderProgram(const GLuint* compiled_shaders);
+        int32_t CompileShader(const char* file_path, const GLenum type);
+        int32_t CreateShaderProgram(const int32_t* compiled_shaders);
     };
 }

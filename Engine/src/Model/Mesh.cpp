@@ -1,25 +1,20 @@
 ﻿#include "TSpch.h"
 #include "Mesh.h"
 
-namespace TESLA
+#include "../Core/Application.h"
+#include "glad/glad.h"
+
+void TESLA::Mesh::SetupMesh()
 {
-void Mesh::SetupGLObjects()
-{
-    GLuint vao;
-    GLuint vbo;
-    GLuint ebo;
+    m_vao = TESLA::ArrayBuffer::Create();
 
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
+    m_vao->Bind();
 
-    glBindVertexArray(vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * m_indices.size(), m_indices.data(), GL_STATIC_DRAW);
+    TESLA::Application::GetVBO()->Bind();
+    TESLA::Application::GetVBO()->UploadData(m_vertices.data(), sizeof(Vertex) * m_vertices.size());
+    
+    TESLA::Application::GetEBO()->Bind();
+    TESLA::Application::GetEBO()->UploadData(m_indices.data(), sizeof(Vertex) * m_vertices.size());
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
@@ -29,37 +24,37 @@ void Mesh::SetupGLObjects()
     
     TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
 
-    m_vao = vao;
+    m_vao->UnBind();
 }
 
-void Mesh::Draw()
+void TESLA::Mesh::Draw()
 {
     glUseProgram(m_shaderProgram);
     UpdateMVPMatrix();
     
-    glBindVertexArray(m_vao);
+    m_vao->Bind();
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 
 
-void Mesh::Rotate(float angle, glm::vec3 upVector)
+void TESLA::Mesh::Rotate(float angle, glm::vec3 upVector)
 {
     m_rotationMatrix = glm::rotate(IDENTITY_MAT, glm::radians(angle), upVector);
 }
 
-void Mesh::Scale(glm::vec3 scale)
+void TESLA::Mesh::Scale(glm::vec3 scale)
 {
     m_scaleMatrix = glm::scale(IDENTITY_MAT, scale);
 }
 
-void Mesh::Translate(glm::vec3 translation)
+void TESLA::Mesh::Translate(glm::vec3 translation)
 {
     m_positionMatrix = glm::translate(IDENTITY_MAT, translation);
     position = translation;
 }
 
-void Mesh::UpdateMVPMatrix()
+void TESLA::Mesh::UpdateMVPMatrix()
 {
     const GLint modelLocation = glGetUniformLocation(m_shaderProgram, "model");
     const GLint viewLocation = glGetUniformLocation(m_shaderProgram, "view");
@@ -70,7 +65,7 @@ void Mesh::UpdateMVPMatrix()
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_projectionMatrix[0][0]);
 
 }
-}
+
 
 
 
