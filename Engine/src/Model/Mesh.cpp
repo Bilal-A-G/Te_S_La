@@ -4,6 +4,26 @@
 #include "../Core/Application.h"
 #include "glad/glad.h"
 
+GLenum ShaderTypeToGLType(TESLA::ShaderDataType type)
+{
+    switch (type)
+    {
+        case TESLA::ShaderDataType::Float:      return GL_FLOAT;
+        case TESLA::ShaderDataType::Float2:     return GL_FLOAT;
+        case TESLA::ShaderDataType::Float3:     return GL_FLOAT;
+        case TESLA::ShaderDataType::Float4:     return GL_FLOAT;
+        case TESLA::ShaderDataType::Mat3:       return GL_FLOAT;
+        case TESLA::ShaderDataType::Mat4:       return GL_FLOAT;
+        case TESLA::ShaderDataType::Int:        return GL_INT;
+        case TESLA::ShaderDataType::Int2:       return GL_INT;
+        case TESLA::ShaderDataType::Int3:       return GL_INT;
+        case TESLA::ShaderDataType::Int4:       return GL_INT;
+        case TESLA::ShaderDataType::Bool:       return GL_BOOL;
+        default:
+            TS_LOG_ASSERTION(false, TESLA_LOGGER::ERR, "Unknown type");
+    }
+}
+
 void TESLA::Mesh::SetupMesh()
 {
     m_vao = TESLA::ArrayBuffer::Create();
@@ -16,11 +36,22 @@ void TESLA::Mesh::SetupMesh()
     TESLA::Application::GetEBO()->Bind();
     TESLA::Application::GetEBO()->UploadData(m_indices.data(), sizeof(Vertex) * m_vertices.size());
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+    BufferLayout layout{
+        {ShaderDataType::Float3, "position"},
+        {ShaderDataType::Float3, "normal"},
+        {ShaderDataType::Float2, "uv"},
+    };
+    
+    TESLA::Application::GetVBO()->SetLayout(layout);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    for(int i = 0;i < layout.GetElements().size();i++)
+    {
+        BufferElement element = layout.GetElements()[i];
+        
+        glEnableVertexAttribArray(i);
+        glVertexAttribPointer(i, element.GetComponentCount(), ShaderTypeToGLType(element.type),
+            element.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), reinterpret_cast<const void*>(element.offset));
+    }
     
     TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
 
@@ -34,7 +65,7 @@ void TESLA::Mesh::Draw()
     
     m_vao->Bind();
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
+    m_vao->UnBind();
 }
 
 

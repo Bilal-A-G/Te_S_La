@@ -12,8 +12,17 @@ namespace TESLA
         void UnBind() override;
         void UploadData(void* vertices, uint32_t size) override;
 
+        const BufferLayout& GetLayout() override
+        {
+            return m_layout;
+        };
+        void SetLayout(const BufferLayout& layout) override
+        {
+            m_layout = layout;
+        };
     private:
         uint32_t* m_bufferObject;
+        BufferLayout m_layout;
     };
 
     class OpenGLElementBuffer : public TESLA::ElementBuffer

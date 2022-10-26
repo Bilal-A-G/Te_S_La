@@ -32,7 +32,6 @@ void TESLA::OpenGLVertexBuffer::UploadData(void* vertices, uint32_t size)
 }
 
 
-
 TESLA::OpenGLElementBuffer::OpenGLElementBuffer()
 {
     m_bufferObject = new uint32_t();
