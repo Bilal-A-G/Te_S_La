@@ -30,11 +30,14 @@ void TESLA::Mesh::SetupMesh()
 
     m_vao->Bind();
 
-    TESLA::Application::GetVBO()->Bind();
-    TESLA::Application::GetVBO()->UploadData(m_vertices.data(), sizeof(Vertex) * m_vertices.size());
+    TESLA::VertexBuffer* vbo = TESLA::VertexBuffer::Create();
+    TESLA::ElementBuffer* ebo = TESLA::ElementBuffer::Create();
     
-    TESLA::Application::GetEBO()->Bind();
-    TESLA::Application::GetEBO()->UploadData(m_indices.data(), sizeof(Vertex) * m_vertices.size());
+    vbo->Bind();
+    vbo->UploadData(m_vertices.data(), sizeof(Vertex) * m_vertices.size());
+    
+    ebo->Bind();
+    ebo->UploadData(m_indices.data(), sizeof(Vertex) * m_vertices.size());
 
     BufferLayout layout{
         {ShaderDataType::Float3, "position"},
@@ -42,7 +45,7 @@ void TESLA::Mesh::SetupMesh()
         {ShaderDataType::Float2, "uv"},
     };
     
-    TESLA::Application::GetVBO()->SetLayout(layout);
+    vbo->SetLayout(layout);
 
     for(int i = 0;i < layout.GetElements().size();i++)
     {
@@ -54,8 +57,6 @@ void TESLA::Mesh::SetupMesh()
     }
     
     TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
-
-    m_vao->UnBind();
 }
 
 void TESLA::Mesh::Draw()
@@ -67,7 +68,6 @@ void TESLA::Mesh::Draw()
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     m_vao->UnBind();
 }
-
 
 void TESLA::Mesh::Rotate(float angle, glm::vec3 upVector)
 {
