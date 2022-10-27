@@ -1,6 +1,5 @@
 ﻿#include "TSpch.h"
 #include "OpenGLBuffer.h"
-
 #include "glad/glad.h"
 
 TESLA::OpenGLVertexBuffer::OpenGLVertexBuffer()
@@ -84,6 +83,21 @@ void TESLA::OpenGLArrayBuffer::UnBind()
 {
     glBindVertexArray(0);
 }
+
+void TESLA::OpenGLArrayBuffer::SetVertexLayout(VertexBuffer* buffer, TESLA::Renderer* renderer)
+{
+    BufferLayout& layout = buffer->GetLayout();
+    for(int i = 0;i < layout.GetElements().size();i++)
+    {
+        BufferElement element = layout.GetElements()[i];
+        
+        glEnableVertexAttribArray(i);
+        glVertexAttribPointer(i, element.GetComponentCount(), renderer->ShaderTypeToGLType(element.type),
+            element.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), reinterpret_cast<const void*>(element.offset));
+    }
+
+}
+
 
 
 

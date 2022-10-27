@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../../Rendering/Buffer.h"
+#include "../../Rendering/Renderer.h"
 
 namespace TESLA
 {
@@ -12,7 +13,7 @@ namespace TESLA
         void UnBind() override;
         void UploadData(void* vertices, uint32_t size) override;
 
-        const BufferLayout& GetLayout() override
+        BufferLayout& GetLayout() override
         {
             return m_layout;
         };
@@ -44,6 +45,7 @@ namespace TESLA
         ~OpenGLArrayBuffer();
         void Bind() override;
         void UnBind() override;
+        void SetVertexLayout(VertexBuffer* buffer, TESLA::Renderer* renderer) override;
     private:
         uint32_t* m_bufferObject;
     };

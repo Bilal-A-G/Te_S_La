@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     while (runApplication)
     {
         TESLA::Application::WindowUpdate();
-        TESLA::Application::GetWindow()->m_context->RenderLoop();
+        TESLA::Application::GetRenderer()->RenderLoop();
         TESLA::Application::Update();
         TESLA::Input::Update();
         Render();

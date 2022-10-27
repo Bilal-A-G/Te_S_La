@@ -23,7 +23,7 @@ void main()
     vec3 viewDir = viewerPosition - outPosition;
     vec3 reflectDir = reflect(-lightDir, normVec);
     
-    float shinyness = 32;
+    float shinyness = 20;
     float specular = pow(max(dot(viewDir, reflectDir), 0.0f), shinyness);
     vec3 specularLight = specStrength * specular * lightColour;
   

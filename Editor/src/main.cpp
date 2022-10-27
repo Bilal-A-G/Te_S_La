@@ -72,10 +72,10 @@ void Init()
 {
     TESLA::Application::Start(windowWidth, windowHeight, "Editor");
 
-    sceneObjects.push_back(ImportModel("cube.obj", "Suzanne 1"));
+    sceneObjects.push_back(ImportModel("Suzanne.obj", "Suzanne 1"));
     sceneObjects[0]->Translate(glm::vec3(-2, 2, 2));
     
-    sceneObjects.push_back(ImportModel("cube.obj", "Cube 1"));
+    sceneObjects.push_back(ImportModel("Suzanne.obj", "Suzanne 2"));
     sceneObjects[1]->Translate(glm::vec3(5, 0, 0));
     
     Camera::Init();

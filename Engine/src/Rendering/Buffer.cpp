@@ -1,18 +1,12 @@
 ﻿#include "TSpch.h"
 #include "Buffer.h"
 
+#include "Renderer.h"
 #include "../Platform/OpenGL/OpenGLBuffer.h"
-
-enum API
-{
-    OpenGL
-};
-
-constexpr API currentAPI = API::OpenGL;
 
 TESLA::VertexBuffer* TESLA::VertexBuffer::Create()
 {
-    if constexpr (currentAPI == API::OpenGL)
+    if constexpr (TESLA::Renderer::currentAPI == API::OpenGL)
     {
         return new OpenGLVertexBuffer();
     }
@@ -20,7 +14,7 @@ TESLA::VertexBuffer* TESLA::VertexBuffer::Create()
 
 TESLA::ElementBuffer* TESLA::ElementBuffer::Create()
 {
-    if constexpr (currentAPI == API::OpenGL)
+    if constexpr (TESLA::Renderer::currentAPI == API::OpenGL)
     {
         return new OpenGLElementBuffer();
     }
@@ -28,7 +22,7 @@ TESLA::ElementBuffer* TESLA::ElementBuffer::Create()
 
 TESLA::ArrayBuffer* TESLA::ArrayBuffer::Create()
 {
-    if constexpr (currentAPI == API::OpenGL)
+    if constexpr (TESLA::Renderer::currentAPI == API::OpenGL)
     {
         return new OpenGLArrayBuffer();
     }

@@ -2,18 +2,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "../TSpch.h"
 #include "../Rendering/Buffer.h"
+#include "../Rendering/Renderer.h"
 
 namespace TESLA
 {
 
 #define IDENTITY_MAT glm::mat4(1.0f)
-    
-    struct Vertex
-    {
-        std::array<float, 3> position;
-        std::array<float, 3> normal;
-        std::array<float, 2> uv;
-    };
 
     class Mesh
     {

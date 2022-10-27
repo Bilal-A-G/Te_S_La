@@ -48,7 +48,7 @@ void Init()
     suzanne->Scale(glm::vec3(0.5, 0.5, 0.5));
     suzanne->Translate(glm::vec3(-1, 0, 0));
     
-    suzanne2 = new TESLA::Model(*suzanne);
+    suzanne2 = CreateMesh("Suzanne.obj", "Monkey2");
     suzanne2->Scale(glm::vec3(0.3,0.3,0.3));
     suzanne2->Translate(glm::vec3(1, 0, 0));
 
@@ -111,10 +111,10 @@ void Render()
         projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, nearPlane, farPlane);
     }
     
-    suzanne2->Draw();
+    suzanne2->Draw(glm::vec3(1.5f, 1.0f, 1.5f));
     suzanne2->Rotate(angle, GLOBAL_UP_VECTOR);
 
-    suzanne->Draw();
+    suzanne->Draw(glm::vec3(1.5f, 1.0f, 1.5f));
     suzanne->Rotate(angle, GLOBAL_UP_VECTOR);
 }
 

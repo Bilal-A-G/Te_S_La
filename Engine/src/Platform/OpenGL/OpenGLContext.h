@@ -13,7 +13,6 @@ namespace TESLA
         void Init() override;
         void SwapBuffers() override;
         void ResizeBuffer(int width, int height) override;
-        void RenderLoop() override;
     private:
         GLFWwindow* m_window;
     };

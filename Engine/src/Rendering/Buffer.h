@@ -1,20 +1,8 @@
 ﻿#pragma once
+#include "../Rendering/Renderer.h"
+
 namespace TESLA
 {
-    enum class ShaderDataType
-    {
-        Float,
-        Float2,
-        Float3,
-        Float4,
-        Mat3,
-        Mat4,
-        Int,
-        Int2,
-        Int3,
-        Int4,
-        Bool
-    };
 
     static uint32_t ShaderDataSize(ShaderDataType type)
     {
@@ -112,7 +100,7 @@ namespace TESLA
         virtual void UploadData(void* vertices, uint32_t size) = 0;
 
         virtual void SetLayout(const BufferLayout& layout) = 0;
-        virtual const BufferLayout& GetLayout() = 0;
+        virtual BufferLayout& GetLayout() = 0;
         static VertexBuffer* Create();
     };
 
@@ -135,6 +123,7 @@ namespace TESLA
 
         virtual void Bind() = 0;
         virtual void UnBind() = 0;
+        virtual void SetVertexLayout(VertexBuffer* buffer, TESLA::Renderer* renderer) = 0;
         
         static ArrayBuffer* Create();
     };
