@@ -28,10 +28,12 @@ int main(int argc, char* argv[])
     while (runApplication)
     {
         TESLA::Application::WindowUpdate();
-        TESLA::Application::GetRenderer()->RenderLoop();
+        TESLA::Application::GetRenderer()->Clear();
         TESLA::Application::Update();
         TESLA::Input::Update();
+        TESLA::Application::GetRenderer()->BeginScene();
         Render();
+        TESLA::Application::GetRenderer()->EndScene();
         DrawGUIs();
         TESLA::Application::LateUpdate();
     }

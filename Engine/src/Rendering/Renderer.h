@@ -37,7 +37,9 @@ namespace TESLA
         
         virtual void Draw(std::vector<TESLA::Vertex>& vertices, std::vector<uint32_t>& indices) = 0;
         virtual int ShaderTypeToGLType(TESLA::ShaderDataType type) = 0;
-        virtual void RenderLoop() = 0;
+        virtual void Clear() = 0;
+        virtual void BeginScene() = 0;
+        virtual void EndScene() = 0;
         static Renderer* Create();
     };
     
