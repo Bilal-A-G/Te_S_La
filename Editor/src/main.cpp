@@ -71,26 +71,26 @@ void ProcessInput()
 void Init()
 {
     TESLA::Application::Start(windowWidth, windowHeight, "Editor");
-    
-    sceneObjects.push_back(ImportModel("Suzanne.obj", "Cube 1"));
-    sceneObjects[0]->Translate(glm::vec3(5, 0, 0));
 
-    sceneObjects.push_back(ImportModel("Suzanne.obj", "Cube 2"));
-    sceneObjects[1] ->Translate(glm::vec3(2, 2, 2));
+    sceneObjects.push_back(ImportModel("cube.obj", "Suzanne 1"));
+    sceneObjects[0]->Translate(glm::vec3(-2, 2, 2));
+    
+    sceneObjects.push_back(ImportModel("cube.obj", "Cube 1"));
+    sceneObjects[1]->Translate(glm::vec3(5, 0, 0));
     
     Camera::Init();
 }
 
 void Render()
 {
-    for (TESLA::Model* model : sceneObjects)
-        model->Draw();
-        
     glm::mat4 newView = Camera::CalculateView();
     if(newView != glm::mat4(1))
     {
         view = newView;
     }
+
+    for (TESLA::Model* model : sceneObjects)
+        model->Draw(Camera::cameraPosition);
 
     ProcessInput();
 }
@@ -98,5 +98,10 @@ void Render()
 void CleanUp()
 {
     TS_LOG_MESSAGE(TESLA_LOGGER::DEBUG, "Application ended");
+    for (TESLA::Model* model : sceneObjects)
+    {
+        delete(model);
+        model = nullptr;
+    }
     sceneObjects.clear();
 }

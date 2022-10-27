@@ -35,8 +35,19 @@ namespace TESLA
             m_vao = mesh.m_vao;
             return *this;
         }
+
+        ~Mesh()
+        {
+            delete m_ebo;
+            delete m_vao;
+            delete m_vbo;
+
+            m_ebo = nullptr;
+            m_vao = nullptr;
+            m_vbo = nullptr;
+        }
     
-        void Draw();
+        void Draw(glm::vec3 cameraPosition);
         void Translate(glm::vec3 translation);
         void Rotate(float angle, glm::vec3 upVector);
         void Scale(glm::vec3 scale);
@@ -47,13 +58,15 @@ namespace TESLA
         }
     private:
         void SetupMesh();
-        void UpdateMVPMatrix();
+        void UpdateMVPMatrix(glm::vec3 cameraPosition);
     
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
         int32_t m_shaderProgram;
         
         TESLA::ArrayBuffer* m_vao;
+        TESLA::VertexBuffer* m_vbo;
+        TESLA::ElementBuffer* m_ebo;
 
         glm::mat4 m_scaleMatrix = IDENTITY_MAT;
         glm::mat4 m_rotationMatrix = IDENTITY_MAT;

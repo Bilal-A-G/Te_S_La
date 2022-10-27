@@ -27,25 +27,24 @@ GLenum ShaderTypeToGLType(TESLA::ShaderDataType type)
 void TESLA::Mesh::SetupMesh()
 {
     m_vao = TESLA::ArrayBuffer::Create();
-
     m_vao->Bind();
 
-    TESLA::VertexBuffer* vbo = TESLA::VertexBuffer::Create();
-    TESLA::ElementBuffer* ebo = TESLA::ElementBuffer::Create();
+    m_vbo = TESLA::VertexBuffer::Create();
+    m_ebo = TESLA::ElementBuffer::Create();
     
-    vbo->Bind();
-    vbo->UploadData(m_vertices.data(), sizeof(Vertex) * m_vertices.size());
+    m_vbo->Bind();
+    m_vbo->UploadData(m_vertices.data(), sizeof(Vertex) * m_vertices.size());
     
-    ebo->Bind();
-    ebo->UploadData(m_indices.data(), sizeof(Vertex) * m_vertices.size());
-
+    m_ebo->Bind();
+    m_ebo->UploadData(m_indices.data(), sizeof(uint32_t) * m_indices.size());
+    
     BufferLayout layout{
         {ShaderDataType::Float3, "position"},
         {ShaderDataType::Float3, "normal"},
         {ShaderDataType::Float2, "uv"},
     };
     
-    vbo->SetLayout(layout);
+    m_vbo->SetLayout(layout);
 
     for(int i = 0;i < layout.GetElements().size();i++)
     {
@@ -55,14 +54,15 @@ void TESLA::Mesh::SetupMesh()
         glVertexAttribPointer(i, element.GetComponentCount(), ShaderTypeToGLType(element.type),
             element.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), reinterpret_cast<const void*>(element.offset));
     }
-    
+
+    m_vao->UnBind();
     TS_LOG_MESSAGE(TESLA_LOGGER::INFO, "Sent to buffer: vertices = {0}, indices = {1}", m_vertices.size(), m_indices.size());
 }
 
-void TESLA::Mesh::Draw()
+void TESLA::Mesh::Draw(glm::vec3 cameraPosition)
 {
     glUseProgram(m_shaderProgram);
-    UpdateMVPMatrix();
+    UpdateMVPMatrix(cameraPosition);
     
     m_vao->Bind();
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
@@ -85,16 +85,18 @@ void TESLA::Mesh::Translate(glm::vec3 translation)
     position = translation;
 }
 
-void TESLA::Mesh::UpdateMVPMatrix()
+void TESLA::Mesh::UpdateMVPMatrix(glm::vec3 cameraPosition)
 {
     const GLint modelLocation = glGetUniformLocation(m_shaderProgram, "model");
     const GLint viewLocation = glGetUniformLocation(m_shaderProgram, "view");
     const GLint projectionLocation = glGetUniformLocation(m_shaderProgram, "projection");
+
+    const GLint cameraLocation = glGetUniformLocation(m_shaderProgram, "cameraPosition");
+    glUniform3f(cameraLocation, cameraPosition.x, cameraPosition.y, cameraPosition.z);
     
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &(m_positionMatrix * m_rotationMatrix * m_scaleMatrix)[0][0]);
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &m_viewMatrix[0][0]);
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_projectionMatrix[0][0]);
-
 }
 
 

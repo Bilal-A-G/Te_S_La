@@ -25,19 +25,19 @@ namespace TESLA
             LoadModel(fileName);
         }
     
-        void Draw();
+        void Draw(glm::vec3 cameraPosition);
 
         void Translate(glm::vec3 translation);
         void Rotate(float angle, glm::vec3 upVector);
         void Scale(glm::vec3 scale);
-        const std::vector<Mesh>& GetMeshes(){return m_meshes;}
+        const std::vector<Mesh*>& GetMeshes(){return m_meshes;}
     
     private:
         void LoadModel(const char* fileName);
         void ProcessNode(aiNode* node, const aiScene* scene);
-        Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+        Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
     
-        std::vector<Mesh> m_meshes;
+        std::vector<Mesh*> m_meshes;
 
         int32_t m_shaderProgram;
     

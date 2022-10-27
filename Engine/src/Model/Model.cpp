@@ -25,11 +25,11 @@ void Model::LoadModel(const char* fileName)
     ProcessNode(scene->mRootNode, scene);
 }
 
-void Model::Draw()
+void Model::Draw(glm::vec3 cameraPosition)
 {
     for (int i = 0; i < m_meshes.size(); ++i)
     {
-        m_meshes[i].Draw();
+        m_meshes[i]->Draw(cameraPosition);
     }
 }
 
@@ -49,7 +49,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
     }
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -80,15 +80,15 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         for (unsigned int j = 0; j < face.mNumIndices; ++j)
             indices.push_back(face.mIndices[j]);
     }
-
-    return Mesh(vertices, indices, m_shaderProgram, m_viewMatrix, m_projectionMatrix);
+    
+    return new Mesh(vertices, indices, m_shaderProgram, m_viewMatrix, m_projectionMatrix);
 }
 
 void Model::Scale(glm::vec3 scale)
 {
     for (int i = 0; i < m_meshes.size(); ++i)
     {
-        m_meshes[i].Scale(scale);
+        m_meshes[i]->Scale(scale);
     }
 }
 
@@ -96,7 +96,7 @@ void Model::Translate(glm::vec3 translation)
 {
     for (int i = 0; i < m_meshes.size(); ++i)
     {
-        m_meshes[i].Translate(translation);
+        m_meshes[i]->Translate(translation);
     }
 }
 
@@ -104,7 +104,7 @@ void Model::Rotate(float angle, glm::vec3 upVector)
 {
     for (int i = 0; i < m_meshes.size(); ++i)
     {
-        m_meshes[i].Rotate(angle, upVector);
+        m_meshes[i]->Rotate(angle, upVector);
     }
 }
 }

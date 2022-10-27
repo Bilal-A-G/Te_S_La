@@ -11,9 +11,9 @@ bool TESLA_PHYSICS::Raycaster::Raycast(glm::vec3 startPosition,
         glm::vec3 currentStep = startPosition + direction * ((i/resolution) * range);
         for(TESLA::Model* model : sceneObjects)
         {
-            for(const TESLA::Mesh& mesh : model->GetMeshes())
+            for(const TESLA::Mesh* mesh : model->GetMeshes())
             {
-                glm::vec3 diffVector = mesh.position - currentStep;
+                glm::vec3 diffVector = mesh->position - currentStep;
                 
                 if(glm::sqrt(diffVector.x * diffVector.x + diffVector.y * diffVector.y) <= radius)
                 {
