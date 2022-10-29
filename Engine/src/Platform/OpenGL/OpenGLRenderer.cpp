@@ -24,11 +24,6 @@ int TESLA::OpenGLRenderer::ShaderTypeToGLType(TESLA::ShaderDataType type)
     }
 }
 
-void TESLA::OpenGLRenderer::Draw(std::vector<TESLA::Vertex>& vertices, std::vector<uint32_t>& indices)
-{
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
-}
-
 void TESLA::OpenGLRenderer::BeginScene()
 {
     

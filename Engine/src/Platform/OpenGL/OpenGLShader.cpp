@@ -28,6 +28,17 @@ uint32_t TESLA::OpenGLShader::GetUniformLocation(const char* uniformName)
     return glGetUniformLocation(m_shader, uniformName);
 }
 
+void TESLA::OpenGLShader::UploadMatrix4(int32_t uniformLocation, glm::mat4 matrix)
+{
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &matrix[0][0]);
+}
+
+void TESLA::OpenGLShader::UploadVector3(int32_t uniformLocation, glm::vec3 vector)
+{
+    glUniform3f(uniformLocation, vector.x, vector.y, vector.z);
+}
+
+
 
 int32_t CompileShader(const char* file_path, const GLenum type)
 {

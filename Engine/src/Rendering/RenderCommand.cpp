@@ -20,3 +20,12 @@ void TESLA::RenderCommand::SetClearColour(glm::vec4 colour)
     }
 }
 
+void TESLA::RenderCommand::Draw(std::vector<TESLA::Vertex>& vertices, std::vector<uint32_t>& indices)
+{
+    if(TESLA::RendererAPI::GetCurrentAPI() == TESLA::API::OpenGL)
+    {
+        TESLA::OpenGLRendererCommand::Draw(vertices, indices);
+    }
+}
+
+

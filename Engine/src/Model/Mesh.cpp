@@ -1,8 +1,7 @@
 ﻿#include "TSpch.h"
 #include "Mesh.h"
-
 #include "../Core/Application.h"
-#include "glad/glad.h"
+#include "../Rendering/RenderCommand.h"
 
 void TESLA::Mesh::SetupMesh()
 {
@@ -37,7 +36,7 @@ void TESLA::Mesh::Draw(glm::vec3 cameraPosition)
     UpdateMVPMatrix(cameraPosition);
     
     m_vao->Bind();
-    TESLA::Application::GetRenderer()->Draw(m_vertices, m_indices);
+    TESLA::RenderCommand::Draw(m_vertices, m_indices);
     m_vao->UnBind();
 }
 
@@ -64,11 +63,11 @@ void TESLA::Mesh::UpdateMVPMatrix(glm::vec3 cameraPosition)
     const uint32_t projectionLocation = m_shader->GetUniformLocation("projection");
 
     const uint32_t cameraLocation = m_shader->GetUniformLocation("cameraPosition");
-    glUniform3f(cameraLocation, cameraPosition.x, cameraPosition.y, cameraPosition.z);
-    
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &(m_positionMatrix * m_rotationMatrix * m_scaleMatrix)[0][0]);
-    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &m_viewMatrix[0][0]);
-    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &m_projectionMatrix[0][0]);
+    m_shader->UploadVector3(cameraLocation, cameraPosition);
+
+    m_shader->UploadMatrix4(modelLocation, m_positionMatrix * m_rotationMatrix * m_scaleMatrix);
+    m_shader->UploadMatrix4(viewLocation, m_viewMatrix);
+    m_shader->UploadMatrix4(projectionLocation, m_projectionMatrix);
 }
 
 
