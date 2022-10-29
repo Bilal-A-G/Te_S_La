@@ -84,7 +84,7 @@ void TESLA::OpenGLArrayBuffer::UnBind()
     glBindVertexArray(0);
 }
 
-void TESLA::OpenGLArrayBuffer::SetVertexLayout(VertexBuffer* buffer, TESLA::Renderer* renderer)
+void TESLA::OpenGLArrayBuffer::SetVertexLayout(VertexBuffer* buffer, TESLA::RendererAPI* renderer)
 {
     BufferLayout& layout = buffer->GetLayout();
     for(int i = 0;i < layout.GetElements().size();i++)

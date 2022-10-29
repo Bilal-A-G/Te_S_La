@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "../EventSystem/Layers/LayerStack.h"
 #include "../Rendering/Renderer.h"
+#include "../Rendering/RendererAPI.h"
 
 namespace TESLA
 {
@@ -18,10 +19,10 @@ namespace TESLA
         static void PushOverlay(Layer* overlay);
         static void DispatchEvent(TESLA::EventFunction function, TESLA::Event* event);
         static TESLA::Window* GetWindow(){return m_window;}
-        static TESLA::Renderer* GetRenderer(){return m_renderer;}
+        static TESLA::RendererAPI* GetRenderer(){return m_rendererAPI;}
     private:
         static LayerStack m_layerStack;
-        static TESLA::Renderer* m_renderer;
+        static TESLA::RendererAPI* m_rendererAPI;
         static TESLA::Window* m_window;
     };
 }

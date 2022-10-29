@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../Rendering/Renderer.h"
+#include "../Rendering/RendererAPI.h"
 
 namespace TESLA
 {
@@ -123,7 +123,7 @@ namespace TESLA
 
         virtual void Bind() = 0;
         virtual void UnBind() = 0;
-        virtual void SetVertexLayout(VertexBuffer* buffer, TESLA::Renderer* renderer) = 0;
+        virtual void SetVertexLayout(VertexBuffer* buffer, TESLA::RendererAPI* renderer) = 0;
         
         static ArrayBuffer* Create();
     };

@@ -1,9 +1,9 @@
 ﻿#include "TSpch.h"
-#include "OpenGLRenderer.h"
+#include "OpenGLRendererAPI.h"
 
 #include "glad/glad.h"
 
-int TESLA::OpenGLRenderer::ShaderTypeToGLType(TESLA::ShaderDataType type)
+int TESLA::OpenGLRendererAPI::ShaderTypeToGLType(TESLA::ShaderDataType type)
 {
     switch (type)
     {
@@ -22,16 +22,6 @@ int TESLA::OpenGLRenderer::ShaderTypeToGLType(TESLA::ShaderDataType type)
         TS_LOG_ASSERTION(false, TESLA_LOGGER::ERR, "Unknown type");
         return 0;
     }
-}
-
-void TESLA::OpenGLRenderer::BeginScene()
-{
-    
-}
-
-void TESLA::OpenGLRenderer::EndScene()
-{
-    
 }
 
 

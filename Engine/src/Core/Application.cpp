@@ -7,13 +7,13 @@
 #include "GLFW/glfw3.h"
 
 TESLA::Window* TESLA::Application::m_window;
-TESLA::Renderer* TESLA::Application::m_renderer;
+TESLA::RendererAPI* TESLA::Application::m_rendererAPI;
 TESLA::LayerStack TESLA::Application::m_layerStack;
 
 void TESLA::Application::Start(const int& windowWidth,const int& windowHeight, const char* name)
 {
     m_window = TESLA::Window::Create({windowWidth, windowHeight, name});
-    m_renderer = TESLA::Renderer::Create();
+    m_rendererAPI = TESLA::RendererAPI::Create();
     
     PushLayer(new GuiLayer());
     PushLayer(new GameLayer());

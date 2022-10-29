@@ -33,9 +33,9 @@ int main(int argc, char* argv[])
         TESLA::RenderCommand::Clear();
         TESLA::Application::Update();
         TESLA::Input::Update();
-        TESLA::Application::GetRenderer()->BeginScene();
+        TESLA::Renderer::BeginScene();
         Render();
-        TESLA::Application::GetRenderer()->EndScene();
+        TESLA::Renderer::EndScene();
         DrawGUIs();
         TESLA::Application::LateUpdate();
     }

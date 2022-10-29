@@ -45,7 +45,7 @@ namespace TESLA
         ~OpenGLArrayBuffer();
         void Bind() override;
         void UnBind() override;
-        void SetVertexLayout(VertexBuffer* buffer, TESLA::Renderer* renderer) override;
+        void SetVertexLayout(VertexBuffer* buffer, TESLA::RendererAPI* renderer) override;
     private:
         uint32_t* m_bufferObject;
     };
