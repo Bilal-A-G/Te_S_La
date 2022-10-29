@@ -33,7 +33,7 @@ void TESLA::Mesh::SetupMesh()
 
 void TESLA::Mesh::Draw(glm::vec3 cameraPosition)
 {
-    glUseProgram(m_shaderProgram);
+    m_shader->Bind();
     UpdateMVPMatrix(cameraPosition);
     
     m_vao->Bind();
@@ -59,11 +59,11 @@ void TESLA::Mesh::Translate(glm::vec3 translation)
 
 void TESLA::Mesh::UpdateMVPMatrix(glm::vec3 cameraPosition)
 {
-    const GLint modelLocation = glGetUniformLocation(m_shaderProgram, "model");
-    const GLint viewLocation = glGetUniformLocation(m_shaderProgram, "view");
-    const GLint projectionLocation = glGetUniformLocation(m_shaderProgram, "projection");
+    const uint32_t modelLocation = m_shader->GetUniformLocation("model");
+    const uint32_t viewLocation = m_shader->GetUniformLocation("view");
+    const uint32_t projectionLocation = m_shader->GetUniformLocation("projection");
 
-    const GLint cameraLocation = glGetUniformLocation(m_shaderProgram, "cameraPosition");
+    const uint32_t cameraLocation = m_shader->GetUniformLocation("cameraPosition");
     glUniform3f(cameraLocation, cameraPosition.x, cameraPosition.y, cameraPosition.z);
     
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &(m_positionMatrix * m_rotationMatrix * m_scaleMatrix)[0][0]);

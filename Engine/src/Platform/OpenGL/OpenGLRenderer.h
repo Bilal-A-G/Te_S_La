@@ -11,6 +11,5 @@ namespace TESLA
         int ShaderTypeToGLType(TESLA::ShaderDataType type) override;
         void BeginScene() override;
         void EndScene() override;
-        void Clear() override;
     };
 }

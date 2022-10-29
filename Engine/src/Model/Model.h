@@ -11,15 +11,15 @@ namespace TESLA
         Model(const Model& model)
             :m_viewMatrix(model.m_viewMatrix), m_projectionMatrix(model.m_projectionMatrix)
         {
-            m_shaderProgram = model.m_shaderProgram;
+            m_shader = model.m_shader;
             m_meshes = model.m_meshes;
             name = model.name;
         }
         
-        Model(const char* fileName, const char* modelname, const int32_t& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+        Model(const char* fileName, const char* modelname, TESLA::Shader* shader, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
-            m_shaderProgram = shaderProgram;
+            m_shader = shader;
             name = modelname;
 
             LoadModel(fileName);
@@ -39,7 +39,7 @@ namespace TESLA
     
         std::vector<Mesh*> m_meshes;
 
-        int32_t m_shaderProgram;
+        TESLA::Shader* m_shader;
     
         glm::mat4& m_viewMatrix;
         glm::mat4& m_projectionMatrix;

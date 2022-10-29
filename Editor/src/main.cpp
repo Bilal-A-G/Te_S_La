@@ -19,10 +19,8 @@ glm::mat4 view = glm::mat4(0);
 
 TESLA::Model* ImportModel(const char* fileName, const char* modelName)
 {
-    TESLA::Shader basicShader;
-    int32_t shaderProgram = basicShader.GetProgram();
-
-    return new TESLA::Model{fileName, modelName, shaderProgram, view, projection};
+    TESLA::Shader* basicShader = TESLA::Shader::Create();
+    return new TESLA::Model{fileName, modelName, basicShader, view, projection};
 }
 
 std::vector<TESLA::Model*> sceneObjects;

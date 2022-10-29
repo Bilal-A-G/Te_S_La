@@ -3,6 +3,7 @@
 #include "../TSpch.h"
 #include "../Rendering/Buffer.h"
 #include "../Rendering/Renderer.h"
+#include "../Rendering/Shader.h"
 
 namespace TESLA
 {
@@ -14,12 +15,12 @@ namespace TESLA
     public:
         glm::vec3 position = glm::vec3(0);
         
-        Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const int32_t& shaderProgram, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+        Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, TESLA::Shader* shader, glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
             : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix)
         {
             m_vertices = vertices;
             m_indices = indices;
-            m_shaderProgram = shaderProgram;
+            m_shader = shader;
             
             this->SetupMesh();
         }
@@ -45,18 +46,13 @@ namespace TESLA
         void Translate(glm::vec3 translation);
         void Rotate(float angle, glm::vec3 upVector);
         void Scale(glm::vec3 scale);
-    
-        const int32_t GetShaderProgram()
-        {
-            return m_shaderProgram;
-        }
     private:
         void SetupMesh();
         void UpdateMVPMatrix(glm::vec3 cameraPosition);
     
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
-        int32_t m_shaderProgram;
+        TESLA::Shader* m_shader;
         
         TESLA::ArrayBuffer* m_vao;
         TESLA::VertexBuffer* m_vbo;

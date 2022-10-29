@@ -29,14 +29,6 @@ void TESLA::OpenGLRenderer::Draw(std::vector<TESLA::Vertex>& vertices, std::vect
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
-void TESLA::OpenGLRenderer::Clear()
-{
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 void TESLA::OpenGLRenderer::BeginScene()
 {
     

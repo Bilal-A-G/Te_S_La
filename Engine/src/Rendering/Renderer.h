@@ -2,11 +2,6 @@
 
 namespace TESLA
 {
-    enum API
-    {
-        OpenGL
-    };
-
     struct Vertex
     {
         std::array<float, 3> position;
@@ -32,12 +27,10 @@ namespace TESLA
     class Renderer
     {
     public:
-        static constexpr TESLA::API currentAPI = TESLA::API::OpenGL;
         virtual ~Renderer(){}
         
         virtual void Draw(std::vector<TESLA::Vertex>& vertices, std::vector<uint32_t>& indices) = 0;
         virtual int ShaderTypeToGLType(TESLA::ShaderDataType type) = 0;
-        virtual void Clear() = 0;
         virtual void BeginScene() = 0;
         virtual void EndScene() = 0;
         static Renderer* Create();

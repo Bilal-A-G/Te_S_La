@@ -2,6 +2,7 @@
 #include "TSpch.h"
 #include "Application.h"
 #include "input/Input.h"
+#include "Rendering/RenderCommand.h"
 
 inline bool runApplication = true;
 
@@ -28,7 +29,8 @@ int main(int argc, char* argv[])
     while (runApplication)
     {
         TESLA::Application::WindowUpdate();
-        TESLA::Application::GetRenderer()->Clear();
+        TESLA::RenderCommand::SetClearColour({0.1f, 0.1f, 0.1f, 0.0f});
+        TESLA::RenderCommand::Clear();
         TESLA::Application::Update();
         TESLA::Input::Update();
         TESLA::Application::GetRenderer()->BeginScene();
