@@ -28,10 +28,8 @@ glm::mat4 view = glm::lookAt( glm::vec3(1.5f, 1.0f, 1.5f), glm::vec3(0.0f),GLOBA
 
 TESLA::Model* CreateMesh(const char* fileName, const char* modelName)
 {
-    TESLA::Shader basicShader;
-    const GLuint shaderProgram = basicShader.GetProgram();
-
-    return new TESLA::Model(fileName, modelName, shaderProgram, view, projection);
+    TESLA::Shader* basicShader = TESLA::Shader::Create();
+    return new TESLA::Model(fileName, modelName, basicShader, view, projection);
 }
 
 void DrawGUIs()
